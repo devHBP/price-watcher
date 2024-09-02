@@ -13,4 +13,9 @@ class Concurrents extends Model
         'nom',
         'url'
     ];
+
+    public function categorieUrlConcurrent()
+    {
+        return $this->hasMany(CategoriesUrlConcurrents::class, 'concurrent_id');
+    }
 }

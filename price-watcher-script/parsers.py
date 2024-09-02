@@ -5,23 +5,41 @@ def parse_start_distrib(soup):
         product_price = product_price[0].text.replace('\xa0', '')
     return product_title, product_price
 
-def parse_esprit_paddel_shop(soup):
-    product_title = soup.find("h1", class_="h1 title-primary")
-    product_price = soup.find(id="so-price")
-    return product_title, product_price.text
-
-def parse_french_padel_shop(soup):
-    product_title = soup.find("h1", class_="no-margin")
-    product_price = soup.find("span", class_="price regular-price")
+# OK
+def parse_esprit_paddel_shop(soup, designation, prix):
+    product_title = soup.select_one(designation)
+    product_price = soup.select_one(prix)
+    if product_title:
+        product_title = product_title.text
     if product_price:
-        product_price = product_price.text.replace('\xa0', '')
+        product_price = product_price.text.replace('€', '')
+        product_price = product_price.replace(',', '.')
+        product_price = float(product_price)
     return product_title, product_price
 
-def parse_padel_xp(soup):
-    product_title = soup.find("h1", class_="h1")
-    product_price = soup.find("span", class_="price")
+# OK
+def parse_french_padel_shop(soup, designation, prix):
+    product_title = soup.select_one(designation)
+    product_price = soup.select_one(prix)
+    if product_title:
+        product_title = product_title.text
     if product_price:
-        product_price = product_price.text.replace('\xa0', '')
+        product_price = product_price.text.replace('\xa0', '').replace('€', '')
+        product_price = product_price.replace(',', '.')
+        product_price = float(product_price)
+    return product_title, product_price
+
+# OK
+def parse_padel_xp(soup, designation, prix):
+    product_title = soup.select_one(designation)
+    product_price = soup.select_one(prix)
+    if product_title:
+        product_title = product_title.text
+    if product_price:
+        product_price = product_price.text.replace('\xa0', '').replace('€', '')
+        product_price = product_price.replace(',', '.')
+        product_price = float(product_price)
+
     return product_title, product_price
 
 """
@@ -31,17 +49,21 @@ def parse_padel_xp(soup):
     donc, le prix de la raquette se trouve en product_price[7], attention surveiller en cas de prix trop déconnant, en fonction du nombre de produit accessoire 
     qu'il peut y avoir, l'index peut entierement changer.
 """
-def parse_padel_reference(soup):
-    product_title = soup.find("h1", class_="font-title")
-    product_price = soup.select("div.leading-5 span.inline-block.mr-3.font-title.flex-nowrap")
+def parse_padel_reference(soup, designation, prix):
+    product_title = soup.select_one(designation)
+    product_price = soup.select(prix)
+    print(product_price)
     # Nettoyage de la chaine de caractère "Raquette de padel\n                                                                NOX AT10 Pro Cup Genius 2024" Oo"
     if product_title:
         title = " ".join(product_title.text.split())
         # Pour éviter de modifier de nouveau le comportement, j'intervertis la property de product_title.text plutot que de renvoyer une chaine de caractere brut
         product_title.string.replace_with(title)
+        product_title = product_title.text
     if product_price:
-        product_price = product_price[7].text.replace('\xa0', '')
+        product_price = product_price[7].text.replace('\xa0', '').replace('€', '')
         product_price = product_price.strip()
+        product_price = product_price.replace(',', '.')
+        product_price = float(product_price)
     return product_title, product_price
 
 def parse_extreme_padel(soup):

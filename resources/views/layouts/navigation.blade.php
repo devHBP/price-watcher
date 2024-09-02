@@ -27,7 +27,7 @@
                     <x-nav-link :href="route('categories-url-concurrents.create')" :active="request()->routeIs('categories-url-concurrents')">
                         {{ __("Complément d'url")}}
                     </x-nav-link>
-                    <x-nav-link>
+                    <x-nav-link :href="route('produits-concurrents.create')" :active="request()->routeIs('produits-concurrents.create')">
                         {{ __("Produits à Tracker")}}
                     </x-nav-link>
                 </div>

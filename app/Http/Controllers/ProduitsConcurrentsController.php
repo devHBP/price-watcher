@@ -29,7 +29,6 @@ class ProduitsConcurrentsController extends Controller
                 'produit_id' => 'required|exists:produits,id',
                 'concurrent_id' => 'required|exists:concurrents,id',
                 'categorie_id' => 'required|exists:categories,id',
-                'categorie_url_concurrent_id' => 'required|exists:categories_url_concurrents,id',
                 'url_produit' => 'required|string|max:255',
                 'css_pick_designation' =>'required|string|max:255',
                 'css_pick_prix' => 'required|string|max:255',
@@ -38,7 +37,9 @@ class ProduitsConcurrentsController extends Controller
         catch(\Illuminate\Validation\ValidationException $e){
             dd($e->errors());
         }
-
+        $concurrent = Concurrents::find($validatedData['concurrent_id']);
+        $urlConcurrent = $concurrent->categorieUrlConcurrent->first()->id;
+        $validatedData['categorie_url_concurrent_id'] = $urlConcurrent;
         $produitConcurrent = new ProduitsConcurrents($validatedData);
         $produitConcurrent->save();
         return redirect()->route('produits-concurrents.create')->with('success', 'Produit correctement ajouté');
@@ -47,7 +48,7 @@ class ProduitsConcurrentsController extends Controller
     public function edit(ProduitsConcurrents $produitConcurrent)
     {
         return view('produits-concurrents.edit', [
-            "produit" => $produitConcurrent,
+            "produitConcurrent" => $produitConcurrent,
             "produits" => Produits::all(),
             "categories" => Categories::all(),
             "concurrents" => Concurrents::all(),
@@ -57,21 +58,26 @@ class ProduitsConcurrentsController extends Controller
 
     public function update(Request $request, ProduitsConcurrents $produitConcurrent)
     {
-        $validatedData = $request->validate([
-            'produit_id' => 'required|exists:produits,id',
-            'concurrent_id' => 'required|exists:concurrents,id',
-            'categorie_id' => 'required|exists:categories,id',
-            'categorie_url_concurrent_id' => 'required|exists:categories_url_concurrents,id',
-            'url_produit' => 'required|string|max:255',
-            'css_pick_designation' =>'required|string|max:255',
-            'css_pick_prix' => 'required|string|max:255',
-        ]);
-
-        $produitConcurrent->save();
-        return redirect()->route('produits-concurrents.create')->with('success', 'Produit modifié !');
+        try{
+            $validatedData = $request->validate([
+                'produit_id' => 'required|exists:produits,id',
+                'concurrent_id' => 'required|exists:concurrents,id',
+                'categorie_id' => 'required|exists:categories,id',
+                'categorie_url_concurrent_id' => 'required|exists:categories_url_concurrents,id',
+                'url_produit' => 'required|string|max:255',
+                'css_pick_designation' =>'required|string|max:255',
+                'css_pick_prix' => 'required|string|max:255',
+            ]);
+        }
+        catch(\Illuminate\Validation\ValidationException $e){
+            dd($e->errors());
+        }
+        
+        $produitConcurrent->update($validatedData);
+        return redirect()->route('produits-concurrents.create')->with('success', 'Produit modifié !'); 
     }
 
-    public function delete(ProduitsConcurrents $produitsConcurrent)
+    public function delete(ProduitsConcurrents $produitConcurrent)
     {
         $produitConcurrent->delete();
         return redirect()->route('produits-concurrents.create')->with('success', 'Produit supprimé.');

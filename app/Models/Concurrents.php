@@ -18,4 +18,9 @@ class Concurrents extends Model
     {
         return $this->hasMany(CategoriesUrlConcurrents::class, 'concurrent_id');
     }
+
+    public function produits()
+    {
+        return $this->hasMany(ProduitsConcurrents::class);
+    }
 }

@@ -16,5 +16,10 @@ class Produits extends Model
     ];
 
     protected $primaryKey = 'id';
+
+    public function concurrents()
+    {
+        return $this->hasMany(ProduitsConcurrents::class, "produit_id");
+    }
     
 }

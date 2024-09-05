@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoriesUrlConcurrentsController;
 use App\Http\Controllers\ConcurrentsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HistoriquePrixProduitsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProduitsConcurrentsController;
 use App\Http\Controllers\ProfileController;
@@ -11,13 +12,16 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth')->group(function(){
-    Route::get('/', function(){ 
-        return view('welcome');
-    })->name('welcome');
-    
-    Route::get('/dashboard', [DashboardController::class, 'index'], function () { 
+    Route::get('/', [DashboardController::class, 'index'],function(){ 
         return view('dashboard');
-    })->name('dashboard');
+    })->name('dashboard.index');
+    
+    Route::get('/dashboard', [DashboardController::class, 'indexTest'])->name('dashboard.index');
+    //Route::get('/dashboard/categories', [DashboardController::class, 'getCategories']);
+    //Route::get('/dashboard/produits/{categorieId}', [DashboardController::class, 'getProduits']);
+    //Route::get('/dashboard/historique-prix/{produitId}', [DashboardController::class, 'getHistoriquePrix']);
+    Route::get('/dashboard/produits/{produit}/', [DashboardController::class, 'changeProduit'])->name('dashboard.changeProduit');
+    Route::get('/dashboard/categorie/{categorie}', [DashboardController::class, 'changeCategorie'])->name('dashboard.changeCategorie');
 });
 
 Route::middleware('auth')->group(function(){
@@ -51,6 +55,9 @@ Route::middleware('auth')->group(function(){
     Route::get('/produits-concurrents/{produitConcurrent}/edit', [ProduitsConcurrentsController::class, 'edit'])->name('produits-concurrents.edit');
     Route::patch('/produits-concurrents/{produitConcurrent}', [ProduitsConcurrentsController::class, 'update'])->name('produits-concurrents.update');
     Route::delete('/produits-concurrents/{produitConcurrent}', [ProduitsConcurrentsController::class, 'delete'])->name('produits-concurrents.delete');
+
+    Route::get('/historiques-prix', [HistoriquePrixProduitsController::class, 'index'])->name('historiques.index');
+    Route::get('/historiques-prix/save', [HistoriquePrixProduitsController::class, 'save']);
 });
 
 Route::middleware('auth')->group(function () {

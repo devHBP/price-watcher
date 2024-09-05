@@ -12,7 +12,8 @@ class Produits extends Model
     protected $fillable = [
         'designation',
         'ean',
-        'pvp'
+        'pvp',
+        'categorie_id'
     ];
 
     protected $primaryKey = 'id';
@@ -20,6 +21,11 @@ class Produits extends Model
     public function concurrents()
     {
         return $this->hasMany(ProduitsConcurrents::class, "produit_id");
+    }
+
+    public function categorie()
+    {
+        return $this->belongsTo(Categories::class);
     }
     
 }

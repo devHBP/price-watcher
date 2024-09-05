@@ -70,24 +70,6 @@
                             @enderror
                         </div>
 
-                        <!-- Liste Déroulante url complementaire 
-                        <div class="mb-4">
-                            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="categorie_url_concurrent_id">
-                                Sélectionnez un Categorie chez le concurrent (url complémentaire)
-                            </label>
-                            <select id="categorie_url_concurrent_id" name="categorie_url_concurrent_id" required
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
-                                <option value="">Choisir un catégorie</option>
-                                @foreach ($categoriesUrlConcurrents as $categorie)
-                                    <option value="{{ $categorie->id }}">{{ $categorie->nom }}</option>
-                                @endforeach
-                            </select>
-                            @error('categorie_url_concurrent_id')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        -->
-
                         <div class="mb-4">
                             <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="url_produit">
                                 Url Produit
@@ -129,7 +111,7 @@
                     </form>
                 </div>
             </div>
-            <div class="overflow-x-auto mt-3.5">
+            <div class="overflow-x-visible mt-3.5">
                 <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
@@ -138,6 +120,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Prix</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Concurrent</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Categorie</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID Produit</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Edit</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Suppr.</th>
                         </tr>

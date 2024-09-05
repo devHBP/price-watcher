@@ -12,6 +12,23 @@
                     <form action="{{ route('products.update', $produit->id) }}" method="POST">
                         @csrf
                         @method('PATCH')
+                        
+                        <!-- Liste Déroulante Catégorie -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="categorie_id">
+                                Sélectionnez un Catégorie
+                            </label>
+                            <select id="categorie_id" name="categorie_id" required
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="">Choisir un catégorie</option>
+                                @foreach ($categories as $categorie)
+                                    <option value="{{ $categorie->id }}" {{ old('categorie_id', $produit->categorie->id) == $categorie->id ? "selected" : "" }}>{{ $categorie->nom }}</option>
+                                @endforeach
+                            </select>
+                            @error('categorie_id')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
 
                         <!-- Designation -->
                         <div class="mb-4">

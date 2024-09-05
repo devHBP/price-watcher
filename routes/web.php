@@ -17,9 +17,6 @@ Route::middleware('auth')->group(function(){
     })->name('dashboard.index');
     
     Route::get('/dashboard', [DashboardController::class, 'indexTest'])->name('dashboard.index');
-    //Route::get('/dashboard/categories', [DashboardController::class, 'getCategories']);
-    //Route::get('/dashboard/produits/{categorieId}', [DashboardController::class, 'getProduits']);
-    //Route::get('/dashboard/historique-prix/{produitId}', [DashboardController::class, 'getHistoriquePrix']);
     Route::get('/dashboard/produits/{produit}/', [DashboardController::class, 'changeProduit'])->name('dashboard.changeProduit');
     Route::get('/dashboard/categorie/{categorie}', [DashboardController::class, 'changeCategorie'])->name('dashboard.changeCategorie');
 });

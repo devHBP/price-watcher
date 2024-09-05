@@ -66,8 +66,9 @@ class DashboardController extends Controller
 
         $selectedProduit = $produits->first();
         $historiquePrix = $this->getHistoriquePrixTest($selectedProduit->id);
-        return view('dashboard.test', compact('categories', 'selectedCategorie', 'produits', 'selectedProduit', 'historiquePrix'));
+        $variations = $this->calculVariation($historiquePrix);
         
+        return view('dashboard.test', compact('variations','categories', 'selectedCategorie', 'produits', 'selectedProduit', 'historiquePrix'));
     }
 
     public function changeCategorie(Categories $categorie)
@@ -81,7 +82,10 @@ class DashboardController extends Controller
             $selectedProduit = $produits->first();
             $historiquePrix = $this->getHistoriquePrixTest($selectedProduit->id);
         }
-        return view('dashboard.test', compact('categories', 'selectedCategorie', 'produits', 'selectedProduit', 'historiquePrix'));
+
+        $variations = $this->calculVariation($historiquePrix); 
+
+        return view('dashboard.test', compact('variations', 'categories', 'selectedCategorie', 'produits', 'selectedProduit', 'historiquePrix'));
     }
 
     public function changeProduit(Produits $produit)
@@ -92,8 +96,9 @@ class DashboardController extends Controller
         $produits = Produits::where('categorie_id', $selectedCategorie->id)->get();
         
         $historiquePrix = $this->getHistoriquePrixTest($selectedProduit->id);
+        $variations = $this->calculVariation($historiquePrix); 
 
-        return view('dashboard.test', compact('categories', 'selectedCategorie', 'produits', 'selectedProduit', 'historiquePrix'));
+        return view('dashboard.test', compact('variations', 'categories', 'selectedCategorie', 'produits', 'selectedProduit', 'historiquePrix'));
     }
 
     public function getHistoriquePrixTest($produitId)
@@ -107,7 +112,7 @@ class DashboardController extends Controller
             ->whereBetween('created_at', [$dateDepart, $dateFin])
             ->orderBy('created_at')
             ->get();
-
+        
         return $this->structuredHistoriqueDataTest($historique);
     }
 
@@ -135,6 +140,37 @@ class DashboardController extends Controller
             'dates' => $dates,
             'structuredData' => $structuredData
         ];
+    }
+
+    public function calculVariation($historique)
+    {
+        $variations = [];
+        $dateArray = array_reverse($historique['dates']);
+        $prixPrecedent = [];
+    
+        foreach ($dateArray as $date) {
+            foreach ($historique['structuredData'] as $concurrent => $prixData) {
+                $prixActuel = $prixData[$date] ?? null;
+    
+                if ($prixActuel !== null) {
+                    if (isset($prixPrecedent[$concurrent])) {
+                        $prixPrecedentActuel = $prixPrecedent[$concurrent];
+                        $variation = $prixActuel - $prixPrecedentActuel;
+                        $variations[$concurrent][$date] = $variation;
+                    } else {
+                        // Pas de variation pour le premier prix
+                        $variations[$concurrent][$date] = 0;
+                    }
+    
+                    // Met à jour le prix précédent pour ce concurrent
+                    $prixPrecedent[$concurrent] = $prixActuel;
+                } else {
+                    // Si aucun prix actuel, pas de variation à calculer
+                    $variations[$concurrent][$date] = null;
+                }
+            }
+        }
+        return $variations;
     }
 
 }

@@ -38,9 +38,17 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($historiquePrix['structuredData'] as $concurrent => $data)
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $concurrent }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">{{ $concurrent }}</td>
                                     @foreach($historiquePrix['dates'] as $date)
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $data[$date] ?? '-' }}</td>
+                                        @php
+                                            $price = $data[$date] ?? '-';
+                                            $prevDate = \Carbon\Carbon::createFromFormat('d-m', $date)->subDay()->format('d-m');
+                                            $prevPrice = $historiquePrix['structuredData'][$concurrent][$prevDate] ?? null;
+                                            $variation =  $prevPrice !== null ? $price - $prevPrice : 0 ;
+                                            $arrow = $variation > 0 ? '↑' : ($variation < 0 ? '↓' : '=');
+                                            $color = $variation > 0 ? 'text-green-500' : ($variation < 0 ? 'text-red-500' : 'text-gray-500');
+                                        @endphp
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 {{ $color }}">{{ $data[$date] ?? '-' }} {{ $arrow }}</td>
                                     @endforeach
                                 </tr>
                             @endforeach

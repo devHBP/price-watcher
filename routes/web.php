@@ -8,6 +8,8 @@ use App\Http\Controllers\HistoriquePrixProduitsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProduitsConcurrentsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServicesController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,6 +21,18 @@ Route::middleware('auth')->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'indexTest'])->name('dashboard.index');
     Route::get('/dashboard/produits/{produit}/', [DashboardController::class, 'changeProduit'])->name('dashboard.changeProduit');
     Route::get('/dashboard/categorie/{categorie}', [DashboardController::class, 'changeCategorie'])->name('dashboard.changeCategorie');
+
+    // Route Utilitaire ( gestion du script relance sauvegarde )
+    Route::get('/services', [ServicesController::class, 'index'])->name('services');
+    Route::get('services/historique',[ServicesController::class, 'historique'])->name('service.historique');
+    Route::get('/run-scraper', function() {
+        Artisan::call('app:run-scraper');
+        return response()->json(['message' => 'Scraping terminé avec succès']);
+    })->name('run-scraper');
+    Route::get('/sync-prix', function(){
+        Artisan::call('app:check-and-update-historique-prix');
+        return response()->json(['message' => 'Prix synchronisés.']);
+    })->name('sync-prix');
 });
 
 Route::middleware('auth')->group(function(){

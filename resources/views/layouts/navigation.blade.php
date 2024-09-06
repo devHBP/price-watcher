@@ -66,6 +66,11 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+            <div class="sm:flex sm:items-center sm:ms-6">
+                <a href="" class="px-3 py-3">
+                    <span>&#9881;</span>
+                </a>
+            </div>
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">

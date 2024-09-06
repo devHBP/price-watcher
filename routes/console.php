@@ -8,5 +8,5 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
-Artisan::command(RunScraper::class)->dayliAt('06:00');
-Artisan::command(CheckAndUpdateHistoriquePrix::class)->hourly();
+//Artisan::command(RunScraper::class)->dayliAt('06:00');
+//Artisan::command(CheckAndUpdateHistoriquePrix::class)->hourly();

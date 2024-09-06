@@ -30,8 +30,6 @@ class ProduitsConcurrentsController extends Controller
                 'concurrent_id' => 'required|exists:concurrents,id',
                 'categorie_id' => 'required|exists:categories,id',
                 'url_produit' => 'required|string|max:255',
-                'css_pick_designation' =>'required|string|max:255',
-                'css_pick_prix' => 'required|string|max:255',
             ]);
         }
         catch(\Illuminate\Validation\ValidationException $e){
@@ -39,7 +37,13 @@ class ProduitsConcurrentsController extends Controller
         }
         $concurrent = Concurrents::find($validatedData['concurrent_id']);
         $urlConcurrent = $concurrent->categorieUrlConcurrent->first()->id;
+        $cssDesignation = $concurrent->css_pick_designation;
+        $cssPrix = $concurrent->css_pick_prix;
+        
         $validatedData['categorie_url_concurrent_id'] = $urlConcurrent;
+        $validatedData['css_pick_designation'] = $cssDesignation;
+        $validatedData['css_pick_prix'] = $cssPrix;
+
         $produitConcurrent = new ProduitsConcurrents($validatedData);
         $produitConcurrent->save();
         return redirect()->route('produits-concurrents.create')->with('success', 'Produit correctement ajouté');
@@ -65,8 +69,8 @@ class ProduitsConcurrentsController extends Controller
                 'categorie_id' => 'required|exists:categories,id',
                 'categorie_url_concurrent_id' => 'required|exists:categories_url_concurrents,id',
                 'url_produit' => 'required|string|max:255',
-                'css_pick_designation' =>'required|string|max:255',
-                'css_pick_prix' => 'required|string|max:255',
+                'css_pick_designation' =>'nullable|string|max:255',
+                'css_pick_prix' => 'nullable|string|max:255',
             ]);
         }
         catch(\Illuminate\Validation\ValidationException $e){

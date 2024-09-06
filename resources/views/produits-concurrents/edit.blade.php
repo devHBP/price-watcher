@@ -94,7 +94,7 @@
                             <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="css_pick_designation">
                                 Css pour atteindre le nom du produit
                             </label>
-                            <input id="css_pick_designation" type="text" name="css_pick_designation" value="{{ old('css_pick_designation', $produitConcurrent->css_pick_designation ) }}" required
+                            <input id="css_pick_designation" type="text" name="css_pick_designation" value="{{ old('css_pick_designation', $produitConcurrent->css_pick_designation ) }}" 
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
                             @error('css_pick_designation')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -105,7 +105,7 @@
                             <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="css_pick_prix">
                                 Css pour atteindre le prix du produit
                             </label>
-                            <input id="css_pick_prix" type="text" name="css_pick_prix" value="{{ old('css_pick_prix', $produitConcurrent->css_pick_prix )}}" required
+                            <input id="css_pick_prix" type="text" name="css_pick_prix" value="{{ old('css_pick_prix', $produitConcurrent->css_pick_prix )}}" 
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
                             @error('css_pick_prix')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>

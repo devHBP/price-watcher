@@ -81,28 +81,6 @@
                             @enderror
                         </div>
 
-                        <div class="mb-4">
-                            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="css_pick_designation">
-                                Css pour atteindre le nom du produit
-                            </label>
-                            <input id="css_pick_designation" type="text" name="css_pick_designation" value="{{ old('css_pick_designation') }}" required
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
-                            @error('css_pick_designation')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="css_pick_prix">
-                                Css pour atteindre le prix du produit
-                            </label>
-                            <input id="css_pick_prix" type="text" name="css_pick_prix" value="{{ old('css_pick_prix') }}" required
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
-                            @error('css_pick_prix')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
                         <div class="flex items-center justify-between">
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                 Ajouter
@@ -111,8 +89,8 @@
                     </form>
                 </div>
             </div>
-            <div class="overflow-x-visible mt-3.5">
-                <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg">
+            <div class="overflow-x-visible overflow-y-auto mt-3.5">
+                <table class="bg-white dark:bg-gray-800 shadow-md rounded-lg">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
@@ -121,6 +99,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Concurrent</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Categorie</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID Produit</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pick CSS</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Edit</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Suppr.</th>
                         </tr>
@@ -129,12 +108,19 @@
                         @foreach ($produitsConcurrents as $produit)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $produit->id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300"><a href="
+                                <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300"><a href="
                                 {{$produit->concurrent->url . $produit->categorieUrlConcurrent->url_complement . $produit->url_produit }}">{{ $produit->designation_concurrent }}</a></td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->prix_concurrent }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->concurrent->nom }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->categorie->nom }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->produit->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    @if (!empty($produit->css_pick_designation && $produit->css_pick_prix))
+                                        <span class="text-green-500">&#10003;</span>
+                                    @else
+                                        <span class="text-red-500">&#10539;</span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4">
                                     <a href="{{ route('produits-concurrents.edit', $produit->id) }}">
                                         <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Edit / Edit_Pencil_01"> <path id="Vector" d="M12 8.00012L4 16.0001V20.0001L8 20.0001L16 12.0001M12 8.00012L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L16 12.0001M12 8.00012L16 12.0001" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg>

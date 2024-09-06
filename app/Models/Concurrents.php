@@ -11,7 +11,9 @@ class Concurrents extends Model
 
     protected $fillable = [
         'nom',
-        'url'
+        'url',
+        'css_pick_designation',
+        'css_pick_prix'
     ];
 
     public function categorieUrlConcurrent()

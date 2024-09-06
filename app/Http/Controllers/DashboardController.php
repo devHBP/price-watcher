@@ -78,7 +78,7 @@ class DashboardController extends Controller
         $produits = Produits::where('categorie_id', $selectedCategorie->id)->get();
         $selectedProduit = new Produits(['designation' => 'Produit non trouvé']);
         $historiquePrix = '';
-        if(count($produits) > 1){
+        if(count($produits) > 0){
             $selectedProduit = $produits->first();
             $historiquePrix = $this->getHistoriquePrixTest($selectedProduit->id);
         }

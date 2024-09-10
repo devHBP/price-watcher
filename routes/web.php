@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoriesUrlConcurrentsController;
 use App\Http\Controllers\ConcurrentsController;
@@ -14,9 +15,13 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth')->group(function(){
-    Route::get('/', [DashboardController::class, 'index'],function(){ 
+    Route::get('/', [DashboardController::class, 'indexTest'],function(){ 
         return view('dashboard');
     })->name('dashboard.index');
+
+    Route::get('/services/register', [RegisteredUserController::class, 'create'])->name('service.register');
+    Route::post('/services/register', [RegisteredUserController::class, 'store'])->name('register');
+    Route::delete('/services/register/{user}', [ProfileController::class, 'delete'])->name('service.delete');
     
     Route::get('/dashboard', [DashboardController::class, 'indexTest'])->name('dashboard.index');
     Route::get('/dashboard/produits/{produit}/', [DashboardController::class, 'changeProduit'])->name('dashboard.changeProduit');
@@ -24,12 +29,15 @@ Route::middleware('auth')->group(function(){
 
     // Route Utilitaire ( gestion du script relance sauvegarde )
     Route::get('/services', [ServicesController::class, 'index'])->name('services');
-    Route::get('services/historique',[ServicesController::class, 'historique'])->name('service.historique');
+    Route::get('/services/historique',[ServicesController::class, 'historique'])->name('service.historique');
+    Route::get('/services/delete-logs', [ServicesController::class, 'deleteLog'])->name('delete-logs');
+    Route::get('/services/logs-scraping', [ServicesController::class, 'getScrapingStatus'])->name('service.scraper-logs');
+    Route::get('/services/utilisateurs', [ServicesController::class, 'users'])->name('service.create');
     Route::get('/run-scraper', function() {
         Artisan::call('app:run-scraper');
         return response()->json(['message' => 'Scraping terminé avec succès']);
     })->name('run-scraper');
-    Route::get('/sync-prix', function(){
+    Route::get('/run-check-and-update-historique-prix', function(){
         Artisan::call('app:check-and-update-historique-prix');
         return response()->json(['message' => 'Prix synchronisés.']);
     })->name('sync-prix');

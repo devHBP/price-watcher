@@ -3,7 +3,36 @@ from parsers import parsers
 from config import get_chrome_options, get_chrome_service
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from datetime import datetime
 import time
+
+
+
+def log_scrapped_product(designation, prix, position, total):
+    connection = get_db_connection()
+    cursors = connection.cursor()
+
+    query = """
+        INSERT INTO scraped_products (designation, prix, position, total, created_at)
+        VALUES (%s, %s, %s, %s, %s)
+    """
+    cursors.execute(query, (designation, prix, position, total, datetime.now()))
+    connection.commit()
+
+    cursors.close()
+    connection.close()
+
+
+def clear_scraped_products():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    query = "DELETE FROM scraped_products"
+    cursor.execute(query)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
 
 def fetch_product_data():
     connection = get_db_connection()
@@ -23,11 +52,13 @@ def fetch_product_data():
 
     return products
 
+
 def compose_full_url(concurrent_url, categorie_url, url_produit):
     if not concurrent_url.endswith('/'):
         concurrent_url += '/'
 
     return f"{concurrent_url}{categorie_url}{url_produit}"
+
 
 def update_product_data(id_produit, prix, designation):
     connection = get_db_connection()
@@ -35,15 +66,16 @@ def update_product_data(id_produit, prix, designation):
 
     query = """
         UPDATE produits_concurrents
-        SET prix_concurrent = %s, designation_concurrent = %s
+        SET prix_concurrent = %s, designation_concurrent = %s, updated_at = %s
         WHERE id = %s
     """
 
-    cursors.execute(query, (prix, designation, id_produit))
+    cursors.execute(query, (prix, designation, datetime.now(), id_produit))
     connection.commit()
 
     cursors.close()
     connection.close()
+
 
 def update_designation(id_produit, designation):
     connection = get_db_connection()
@@ -60,13 +92,15 @@ def update_designation(id_produit, designation):
     cursors.close()
     connection.close()
 
+
 def main():
     chrome_options = get_chrome_options()
     driver = webdriver.Chrome(service=get_chrome_service(), options=chrome_options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     products = fetch_product_data()
+    total_products = len(products)
 
-    for product in products:
+    for index, product in enumerate(products, start=1):
         # Adaptation des parsers on se base sur la base url du concurrent
         base_url = product['concurrent_url']
         parser = parsers.get(base_url)
@@ -86,11 +120,13 @@ def main():
             soup = BeautifulSoup(page_source, 'html.parser')
             designation, prix = parser(soup, parser_designation, parser_prix)
             update_product_data(product['id'], prix, designation)
+            log_scrapped_product(designation, prix, index, total_products)
             print(designation, prix)
         except Exception as error:
             print(f"Erreur lors du traitement de {full_url}: {str(error)}")
 
     driver.quit()
+    clear_scraped_products()
 
 if __name__ == "__main__":
     main()

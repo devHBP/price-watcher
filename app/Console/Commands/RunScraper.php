@@ -36,14 +36,18 @@ class RunScraper extends Command
             return;
         }
 
+        set_time_limit(0);
         // init du Chache ( verrou )
-        Cache::put('scraper_running', true, now()->addMinutes(60));
+        Cache::put('scraper_running', true, now()->addMinutes(6));
         try{
-            $venvPath = base_path('price-watcher-script/venv/bin/activate');
+
+            // on tente de libérer la session pour que les requette http du poilling ne soit pa bloquées
+            //session_write_close();
+
+            $venvPath = base_path('price-watcher-script/venv/bin/python');
             $scriptPath = base_path('price-watcher-script/data_fetcher.py');
             
-            $command = "source {$venvPath} && python {$scriptPath}";
-    
+            $command = "{$venvPath} {$scriptPath} > /dev/null 2>&1 &";
             exec($command, $output, $returnVar);
     
             if ($returnVar === 0 ){
@@ -57,9 +61,12 @@ class RunScraper extends Command
                 $this->line($line);
             }
         }
+        catch(\Exception $e){
+            $this->error('Une erreur est survenue: ' . $e->getMessage());
+        }
         finally{
             // Tout s'est bien passé ? on libère le Cache.
-            Cache::forget('scraper_runnig');
+            Cache::forget('scraper_running');
         }
     }
 }

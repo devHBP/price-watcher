@@ -42,11 +42,35 @@
                                     @foreach($historiquePrix['dates'] as $date)
                                         @php
                                             $price = $data[$date] ?? '-';
-                                            $prevDate = \Carbon\Carbon::createFromFormat('d-m', $date)->subDay()->format('d-m');
-                                            $prevPrice = $historiquePrix['structuredData'][$concurrent][$prevDate] ?? null;
-                                            $variation =  $prevPrice !== null ? $price - $prevPrice : 0 ;
-                                            $arrow = $variation > 0 ? '↑' : ($variation < 0 ? '↓' : '=');
-                                            $color = $variation > 0 ? 'text-green-500' : ($variation < 0 ? 'text-red-500' : 'text-gray-500');
+                                            
+                                            // Initialiser les variables
+                                            $prevPrice = null;
+                                            $currentDate = \Carbon\Carbon::createFromFormat('d-m', $date)->startOfDay();
+                                            $searchDate = $currentDate->copy()->subDay(); // Commencer à chercher le jour précédent
+                                            $limitDays = 7; // Limiter la recherche à 7 jours précédents
+                                            $found = false;
+                                    
+                                            // Chercher la dernière entrée de prix dans les jours précédents
+                                            for ($i = 0; $i < $limitDays; $i++) {
+                                                $prevDateFormatted = $searchDate->format('d-m');
+                                                if (isset($historiquePrix['structuredData'][$concurrent][$prevDateFormatted])) {
+                                                    $prevPrice = $historiquePrix['structuredData'][$concurrent][$prevDateFormatted];
+                                                    $found = true;
+                                                    break;
+                                                }
+                                                $searchDate->subDay(); // Remonter d'un jour
+                                            }
+                                    
+                                            // Calculer la variation
+                                            if ($found && $price !== '-') {
+                                                $variation = $price - $prevPrice;
+                                                $arrow = $variation > 0 ? '↑' : ($variation < 0 ? '↓' : '=');
+                                                $color = $variation > 0 ? 'text-green-500' : ($variation < 0 ? 'text-red-500' : 'text-gray-500');
+                                            } else {
+                                                $variation = 'N/A'; // Pas de variation si aucun prix précédent trouvé ou prix actuel inconnu
+                                                $arrow = '—'; // Symbole pour indiquer l'absence de données
+                                                $color = 'text-gray-500'; // Couleur neutre
+                                            }
                                         @endphp
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 {{ $color }}">{{ $data[$date] ?? '-' }} {{ $arrow }}</td>
                                     @endforeach

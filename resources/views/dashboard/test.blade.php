@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between">
             <!-- Title -->
             <h2 class="font-semibold text-2xl text-gray-900 dark:text-gray-100 leading-tight">
-                {{ __('Tableau Comparatif - ' . $selectedProduit->designation ) }}
+                {{ __( $selectedProduit->designation ) }}
             </h2>
     
             <!-- PVP Display -->

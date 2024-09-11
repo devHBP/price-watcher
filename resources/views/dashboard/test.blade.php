@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Tableau Comparatif - ' . $selectedProduit->designation . ' ' .$selectedProduit->pvp . ' €') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <!-- Title -->
+            <h2 class="font-semibold text-2xl text-gray-900 dark:text-gray-100 leading-tight">
+                {{ __('Tableau Comparatif - ' . $selectedProduit->designation ) }}
+            </h2>
+    
+            <!-- PVP Display -->
+            <div class="bg-blue-500 text-white rounded-full px-6 py-3 shadow-lg flex items-center space-x-3">
+                <span class="text-lg font-bold">PVP: {{ number_format($selectedProduit->pvp, 2, ',', ' ') }} €</span>
+            </div>
+        </div>
     </x-slot>
 
     <div class="flex flex-col md:flex-row p-4 space-x-4">

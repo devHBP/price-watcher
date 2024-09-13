@@ -5,7 +5,17 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from datetime import datetime
 import time
+import requests
 
+
+def scrape_with_requests(url, parser, parser_designation, parser_prix):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.137 Safari/537.36'
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    designation, prix = parser(soup, parser_designation, parser_prix)
+    return designation, prix
 
 
 def log_scrapped_product(designation, prix, position, total):
@@ -97,12 +107,16 @@ def main():
     chrome_options = get_chrome_options()
     driver = webdriver.Chrome(service=get_chrome_service(), options=chrome_options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+
+    print(driver.capabilities['browserVersion'])
+
     products = fetch_product_data()
     total_products = len(products)
 
     for index, product in enumerate(products, start=1):
         # Adaptation des parsers on se base sur la base url du concurrent
         base_url = product['concurrent_url']
+
         parser = parsers.get(base_url)
         if not parser:
             print(f"Pas de parser disponible pour cet URL {base_url}")
@@ -111,19 +125,30 @@ def main():
         full_url = compose_full_url(product['concurrent_url'], product['categorie_url'], product['url_produit'])
         parser_designation = product['css_pick_designation']
         parser_prix = product['css_pick_prix']
-        #print(f"URL complète: {full_url}")
-        #print(f"Parsing désignation : {parser_designation}, Parser prix : {parser_prix}")
-        try:
-            driver.get(full_url)
-            time.sleep(4)
-            page_source = driver.page_source
-            soup = BeautifulSoup(page_source, 'html.parser')
-            designation, prix = parser(soup, parser_designation, parser_prix)
-            update_product_data(product['id'], prix, designation)
-            log_scrapped_product(designation, prix, index, total_products)
-            print(designation, prix)
-        except Exception as error:
-            print(f"Erreur lors du traitement de {full_url}: {str(error)}")
+
+        if 'raquette-padel.com' in base_url:
+            try:
+                time.sleep(2)
+                designation, prix = scrape_with_requests(full_url, parser, parser_designation, parser_prix)
+                update_product_data(product['id'], prix, designation)
+                log_scrapped_product(designation, prix, index, total_products)
+                print("Passage dans le scrapping basique")
+                print(designation, prix)
+            except:
+                print(f"Erreur lors du traitement de {full_url} avec requests: {str(error)}")
+        else:
+            try:
+                driver.get(full_url)
+                time.sleep(4)
+                
+                page_source = driver.page_source
+                soup = BeautifulSoup(page_source, 'html.parser')
+                designation, prix = parser(soup, parser_designation, parser_prix)
+                update_product_data(product['id'], prix, designation)
+                log_scrapped_product(designation, prix, index, total_products)
+                print(designation, prix)
+            except Exception as error:
+                print(f"Erreur lors du traitement de {full_url}: {str(error)}")
 
     driver.quit()
     clear_scraped_products()

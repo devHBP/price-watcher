@@ -20,6 +20,7 @@ class ProductsController extends Controller
             'designation' => 'required|string|max:255',
             'ean' => 'required|string|max:13|unique:produits',
             'pvp' => 'required|numeric|min:0',
+            'm_pvp' => 'required|numeric|min:0',
         ]);
 
         Produits::create($validatedData);
@@ -38,6 +39,7 @@ class ProductsController extends Controller
             'designation' => 'required|string|max:255',
             'ean' => 'required|string|max:13',
             'pvp' => 'required|numeric|min:0',
+            'm_pvp' => 'required|numeric|min:0'
         ]);
 
         $produit->update($validatedData);

@@ -57,6 +57,15 @@
                             @enderror
                         </div>
 
+                        <!-- Minimal PVP -->
+                        <div class="mb-4">
+                            <label for="m_pvp" class="block text-sm font-medium text-gray-700 dark:text-gray-200">PVP Minimal(€)</label>
+                            <input type="number" name="m_pvp" id="m_pvp" value="{{ old('m_pvp', $produit->m_pvp) }}" step="0.01" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                            @error('m_pvp')
+                                <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Bouton de soumission -->
                         <div class="flex justify-end">
                             <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Mettre à jour</button>

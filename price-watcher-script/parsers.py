@@ -66,5 +66,6 @@ parsers = {
     "https://www.padelreference.com/fr/": parse_padel_reference,
     "https://www.extreme-padel.fr/": parse_universel,
     "https://www.raquette-padel.com/": parse_universel,
+    "https://colizey.fr/": parse_universel,
     "https://padel-par4.com/": parse_padel_par_4
 }

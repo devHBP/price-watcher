@@ -13,6 +13,7 @@ class Produits extends Model
         'designation',
         'ean',
         'pvp',
+        'm_pvp',
         'categorie_id'
     ];
 
@@ -27,5 +28,4 @@ class Produits extends Model
     {
         return $this->belongsTo(Categories::class);
     }
-    
 }

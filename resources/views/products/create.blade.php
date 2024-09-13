@@ -60,11 +60,22 @@
 
                         <div class="mb-4">
                             <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="pvp">
-                                PVP
+                                Prix de Vente Public
                             </label>
                             <input id="pvp" type="text" name="pvp" value="{{ old('pvp') }}" required
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
                             @error('pvp')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="m_pvp">
+                                Prix de Vente Public Minimum (Pour seuil alerte)
+                            </label>
+                            <input id="m_pvp" type="text" name="m_pvp" value="{{ old('m_pvp') }}" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
+                            @error('m_pvp')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
                         </div>
@@ -77,7 +88,7 @@
                     </form>
                 </div>
             </div>
-            <div class="overflow-x-auto mt-3.5">
+            <div class="overflow-x-visible overflow-y-auto mt-3.5">
                 <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
@@ -85,6 +96,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Désignation</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">EAN</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">PVP</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Min-PVP</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Catégorie</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Edit</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Suppr.</th>
@@ -93,10 +105,11 @@
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach ($produits as $produit)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $produit->id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->designation }}</td>
+                                <td class="px-6 py-4 whitespace-wrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $produit->id }}</td>
+                                <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->designation }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->ean }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->pvp }}€</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->m_pvp }}€</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->categorie->nom }}</td>
                                 <td class="px-6 py-4">
                                     <a href="{{ route('products.edit', $produit->id) }}">

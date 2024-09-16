@@ -1,6 +1,6 @@
 const syncLink = {
 
-    link: "http://127.0.0.1:8000/run-check-and-update-historique-prix",
+    link: "https://concurrence.h-bp.fr/run-check-and-update-historique-prix",
     message : null,
 
     init: () => {

@@ -108,8 +108,6 @@ def main():
     driver = webdriver.Chrome(service=get_chrome_service(), options=chrome_options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
-    print(driver.capabilities['browserVersion'])
-
     products = fetch_product_data()
     total_products = len(products)
 

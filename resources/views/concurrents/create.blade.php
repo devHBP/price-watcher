@@ -41,6 +41,14 @@
                         </div>
 
                         <div class="mb-4">
+                            <label for="est_francais" class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">Type de Concurrent</label>
+                            <select name="est_francais" id="est_francais" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
+                                <option class="text-sm" value="1" {{ old('est_francais', $concurrent->est_francais ?? '') == '1' ? 'selected' : '' }}>Français</option>
+                                <option class="text-sm" value="0" {{ old('est_francais', $concurrent->est_francais ?? '') == '0' ? 'selected' : '' }}>Autre</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
                             <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="css_pick_designation">
                                 Méthode de selection du titre des produits en CSS <span class="text-slate-400"> *non obligatoire</span>
                             </label>
@@ -77,6 +85,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nom</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">URL</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">css-designation</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">css-prix</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Edit</th>
@@ -89,6 +98,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $concurrent->id }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $concurrent->nom }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $concurrent->url }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $concurrent->est_francais ? "FR" : "NF"}}</td>
                                 <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $concurrent->css_pick_designation }}</td>
                                 <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $concurrent->css_pick_prix }}</td>
                                 <td class="px-6 py-4">

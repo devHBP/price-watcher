@@ -44,8 +44,8 @@ class RunScraper extends Command
             // on tente de libérer la session pour que les requette http du poilling ne soit pa bloquées
             //session_write_close();
 
-            $venvPath = base_path('price-watcher-script/venv/bin/python');
-            $scriptPath = base_path('price-watcher-script/data_fetcher.py');
+            $venvPath = '/home/ubuntu/Documents/price-watcher/price-watcher-script/venv/bin/python';
+            $scriptPath = '/home/ubuntu/Documents/price-watcher/price-watcher-script/data_fetcher.py';
             
             $command = "{$venvPath} {$scriptPath} > /dev/null 2>&1 &";
             exec($command, $output, $returnVar);

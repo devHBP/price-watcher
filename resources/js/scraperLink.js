@@ -6,7 +6,7 @@ const scraperLink = {
     progressBar: null,
     interval: null,
     logPollingInterval: null,
-    link: "http://127.0.0.1:8000",
+    link: "https://concurrence.h-bp.fr",
 
     init: () => {
         // Récupération du temps approximatif du script

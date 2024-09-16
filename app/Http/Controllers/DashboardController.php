@@ -65,10 +65,22 @@ class DashboardController extends Controller
         $produits = $selectedCategorie ? Produits::where('categorie_id', $selectedCategorie->id)->get() : [] ;
 
         $selectedProduit = $produits->first();
-        $historiquePrix = $this->getHistoriquePrixTest($selectedProduit->id);
-        $variations = $this->calculVariation($historiquePrix);
+        $historiquePrixFr = $this->getHistoriquePrixTest($selectedProduit->id, true);
+        $variationsFr = $this->calculVariation($historiquePrixFr);
+
+        $historiquePrixNf = $this->getHistoriquePrixTest($selectedProduit->id, false);
+        $variationsNf = $this->calculVariation($historiquePrixFr);
         
-        return view('dashboard.test', compact('variations','categories', 'selectedCategorie', 'produits', 'selectedProduit', 'historiquePrix'));
+        return view('dashboard.test', compact(
+            'variationsFr',
+            'categories',
+            'selectedCategorie',
+            'produits',
+            'selectedProduit',
+            'historiquePrixFr',
+            'historiquePrixNf',
+            'variationsNf'
+        ));
     }
 
     public function changeCategorie(Categories $categorie)
@@ -80,12 +92,23 @@ class DashboardController extends Controller
         $historiquePrix = '';
         if(count($produits) > 0){
             $selectedProduit = $produits->first();
-            $historiquePrix = $this->getHistoriquePrixTest($selectedProduit->id);
+            $historiquePrixFr = $this->getHistoriquePrixTest($selectedProduit->id, true);
+            $historiquePrixNf = $this->getHistoriquePrixTest($selectedProduit->id, false);
         }
 
-        $variations = $this->calculVariation($historiquePrix); 
+        $variationsFr = $this->calculVariation($historiquePrixFr); 
+        $variationsNf = $this->calculVariation($historiquePrixNf);
 
-        return view('dashboard.test', compact('variations', 'categories', 'selectedCategorie', 'produits', 'selectedProduit', 'historiquePrix'));
+        return view('dashboard.test', compact(
+            'variationsFr',
+            'categories',
+            'selectedCategorie',
+            'produits',
+            'selectedProduit',
+            'historiquePrixFr',
+            'historiquePrixNf',
+            'variationsNf',
+        ));
     }
 
     public function changeProduit(Produits $produit)
@@ -95,19 +118,35 @@ class DashboardController extends Controller
         $selectedCategorie = $produit->categorie;
         $produits = Produits::where('categorie_id', $selectedCategorie->id)->get();
         
-        $historiquePrix = $this->getHistoriquePrixTest($selectedProduit->id);
-        $variations = $this->calculVariation($historiquePrix); 
+        $historiquePrixFr = $this->getHistoriquePrixTest($selectedProduit->id, true);
+        $variationsFr = $this->calculVariation($historiquePrixFr);
 
-        return view('dashboard.test', compact('variations', 'categories', 'selectedCategorie', 'produits', 'selectedProduit', 'historiquePrix'));
+        $historiquePrixNf = $this->getHistoriquePrixTest($selectedProduit->id, false);
+        $variationsNf = $this->calculVariation($historiquePrixFr);
+
+        return view('dashboard.test', compact(
+            'variationsFr',
+            'categories',
+            'selectedCategorie',
+            'produits',
+            'selectedProduit',
+            'historiquePrixFr',
+            'historiquePrixNf',
+            'variationsNf'
+        ));
     }
 
-    public function getHistoriquePrixTest($produitId)
+    public function getHistoriquePrixTest($produitId, $estFrancais)
     {
         $dateDepart = Carbon::now()->subDays(7)->startofDay();
         $dateFin = Carbon::now()->endOfDay();
 
-        $historique = HistoriquePrixProduits::whereHas('produitConcurrent', function($query) use ($produitId) {
-            $query->where('produit_id', $produitId);
+        $historique = HistoriquePrixProduits::whereHas('produitConcurrent', function($query) use ($produitId, $estFrancais) {
+            $query->where('produit_id', $produitId)
+                ->whereHas('concurrent', function($query) use ($estFrancais){
+                    $query->where('est_francais', $estFrancais);
+                });
+            ;
         })
             ->whereBetween('created_at', [$dateDepart, $dateFin])
             ->orderBy('created_at')
@@ -172,5 +211,4 @@ class DashboardController extends Controller
         }
         return $variations;
     }
-
 }

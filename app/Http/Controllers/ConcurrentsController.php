@@ -18,6 +18,7 @@ class ConcurrentsController extends Controller
         $validatedData = $request->validate([
             'nom' => 'required|string|max:255',
             'url' => 'required|string',
+            'est_francais' => 'required|boolean',
             'css_pick_designation' => 'nullable|string',
             'css_pick_prix' => 'nullable|string',
         ]);
@@ -37,6 +38,7 @@ class ConcurrentsController extends Controller
         $validatedData = $request->validate([
             'nom' => 'required|string|max:255',
             'url' => 'required|string',
+            'est_francais' => 'required|boolean',
             'css_pick_designation' => 'nullable|string',
             'css_pick_prix' => 'nullable|string'
         ]);

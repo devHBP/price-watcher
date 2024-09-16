@@ -12,6 +12,7 @@ class Concurrents extends Model
     protected $fillable = [
         'nom',
         'url',
+        'est_francais',
         'css_pick_designation',
         'css_pick_prix'
     ];

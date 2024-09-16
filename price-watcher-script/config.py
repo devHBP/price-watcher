@@ -1,8 +1,9 @@
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-import logging
+import os
 
+os.environ['WDM_LOCAL'] = '/home/ubuntu/Documents/price-watcher/price-watcher-script/.wdm'
 
 def get_chrome_options():
     chrome_options = Options()

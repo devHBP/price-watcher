@@ -31,6 +31,14 @@
                         </div>
 
                         <div class="mb-4">
+                            <label for="est_francais" class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">Type de Concurrent</label>
+                            <select name="est_francais" id="est_francais" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
+                                <option class="text-sm" value="1" {{ old('est_francais', $concurrent->est_francais ?? '') == '1' ? 'selected' : '' }}>Français</option>
+                                <option class="text-sm" value="0" {{ old('est_francais', $concurrent->est_francais ?? '') == '0' ? 'selected' : '' }}>Autre</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
                             <label for="css_pick_designation" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Methode de séléction du titre</label>
                             <input type="text" name="css_pick_designation" id="css_pick_designation" value="{{ old('css_pick_designation', $concurrent->css_pick_designation) }}" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             @error('css_pick_designation')

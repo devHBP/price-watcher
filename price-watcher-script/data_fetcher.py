@@ -124,7 +124,7 @@ def main():
         parser_designation = product['css_pick_designation']
         parser_prix = product['css_pick_prix']
 
-        if 'raquette-padel.com' or 'sportlet.store' in base_url:
+        if 'raquette-padel.com' in base_url or 'sportlet.store' in base_url:
             try:
                 time.sleep(2)
                 designation, prix = scrape_with_requests(full_url, parser, parser_designation, parser_prix)
@@ -132,7 +132,7 @@ def main():
                 log_scrapped_product(designation, prix, index, total_products)
                 print("Passage dans le scrapping basique")
                 print(designation, prix)
-            except:
+            except Exception as error:
                 print(f"Erreur lors du traitement de {full_url} avec requests: {str(error)}")
         else:
             try:

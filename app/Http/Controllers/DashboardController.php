@@ -141,7 +141,7 @@ class DashboardController extends Controller
 
     public function getHistoriquePrixTest($produitId, $estFrancais)
     {
-        $dateDepart = Carbon::now()->subDays(20)->startofDay();
+        $dateDepart = Carbon::now()->subDays(8)->startofDay();
         $dateFin = Carbon::now()->endOfDay();
 
         $historique = HistoriquePrixProduits::whereHas('produitConcurrent', function($query) use ($produitId, $estFrancais) {
@@ -164,7 +164,7 @@ class DashboardController extends Controller
         $today = \Carbon\Carbon::now();
         $dates = [];
     
-        for ($i = 12; $i >= 0; $i--) {
+        for ($i = 6; $i >= 0; $i--) {
             $dates[] = $today->copy()->subDays($i)->format('d-m');
         }
     

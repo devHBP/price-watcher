@@ -74,7 +74,7 @@
                                             }
                                     
                                             // Calculer la variation
-                                            if ($found && $price !== '-') {
+                                            if ($found && is_numeric($price)&& is_numeric($prevPrice)) {
                                                 $variation = $price - $prevPrice;
                                                 $arrow = $variation > 0 ? '↑' : ($variation < 0 ? '↓' : '=');
                                                 $color = $variation > 0 ? 'text-green-500' : ($variation < 0 ? 'text-red-500' : 'text-gray-500');

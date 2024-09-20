@@ -89,7 +89,10 @@ class DashboardController extends Controller
         $selectedCategorie = $categorie;
         $produits = Produits::where('categorie_id', $selectedCategorie->id)->get();
         $selectedProduit = new Produits(['designation' => 'Produit non trouvé']);
-        $historiquePrix = '';
+        
+        $historiquePrixFr = [];
+        $historiquePrixNf = [];
+
         if(count($produits) > 0){
             $selectedProduit = $produits->first();
             $historiquePrixFr = $this->getHistoriquePrixTest($selectedProduit->id, true);
@@ -138,7 +141,7 @@ class DashboardController extends Controller
 
     public function getHistoriquePrixTest($produitId, $estFrancais)
     {
-        $dateDepart = Carbon::now()->subDays(7)->startofDay();
+        $dateDepart = Carbon::now()->subDays(20)->startofDay();
         $dateFin = Carbon::now()->endOfDay();
 
         $historique = HistoriquePrixProduits::whereHas('produitConcurrent', function($query) use ($produitId, $estFrancais) {
@@ -157,27 +160,58 @@ class DashboardController extends Controller
 
     public function structuredHistoriqueDataTest($historiques)
     {
+        // 1. Calculer les 7 derniers jours (avec aujourd'hui inclus)
+        $today = \Carbon\Carbon::now();
         $dates = [];
+    
+        for ($i = 12; $i >= 0; $i--) {
+            $dates[] = $today->copy()->subDays($i)->format('d-m');
+        }
+    
         $structuredData = [];
-
+    
+        // 2. Construire les données structurées avec les dates disponibles
         foreach ($historiques as $historique) {
             $date = $historique->created_at->format('d-m');
-
-            if(!in_array($date, $dates)){
-                $dates[] = $date;
-            }
-
+    
+            // Extraire le nom du concurrent
             $concurrent = $historique->produitConcurrent->concurrent->nom;
-            if(!isset($structuredData[$concurrent])){
+    
+            // Initialiser le tableau pour ce concurrent s'il n'existe pas encore
+            if (!isset($structuredData[$concurrent])) {
                 $structuredData[$concurrent] = [];
             }
-
+    
+            // Ajouter le prix pour la date donnée pour ce concurrent
             $structuredData[$concurrent][$date] = $historique->prix;
         }
-
+    
+        // 3. S'assurer que chaque concurrent a des données pour les 7 derniers jours
+        foreach ($structuredData as $concurrent => $data) {
+            foreach ($dates as $date) {
+                // Si une date est manquante pour ce concurrent, la remplir avec une valeur par défaut
+                if (!isset($data[$date])) {
+                    $structuredData[$concurrent][$date] = '-'; // Valeur par défaut si une date est manquante
+                }
+            }
+    
+            // Réordonner les données par date (pour avoir les dates dans l'ordre chronologique)
+            ksort($structuredData[$concurrent]);
+        }
+    
+        // 4. Si des concurrents sont complètement absents du tableau, ajouter des valeurs vides pour eux
+        foreach ($historiques as $historique) {
+            $concurrent = $historique->produitConcurrent->concurrent->nom;
+    
+            if (!isset($structuredData[$concurrent])) {
+                $structuredData[$concurrent] = array_fill_keys($dates, '-');
+            }
+        }
+    
+        // 5. Retourner les données structurées avec exactement 7 jours
         return [
-            'dates' => $dates,
-            'structuredData' => $structuredData
+            'dates' => $dates,  // Les 7 derniers jours
+            'structuredData' => $structuredData  // Les données par concurrent pour ces 7 jours
         ];
     }
 
@@ -191,7 +225,7 @@ class DashboardController extends Controller
             foreach ($historique['structuredData'] as $concurrent => $prixData) {
                 $prixActuel = $prixData[$date] ?? null;
     
-                if ($prixActuel !== null) {
+                if ($prixActuel !== null && is_numeric($prixActuel)) {
                     if (isset($prixPrecedent[$concurrent])) {
                         $prixPrecedentActuel = $prixPrecedent[$concurrent];
                         $variation = $prixActuel - $prixPrecedentActuel;

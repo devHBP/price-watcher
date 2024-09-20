@@ -59,6 +59,20 @@ def parse_padel_par_4(soup, designation, prix):
             
     return product_title, product_price
 
+def parse_padel_kiwi(soup, designation, prix):
+    product_title = soup.select_one(designation)
+    product_price = soup.select_one(prix)
+    if product_title:
+        product_title = product_title.text
+    if product_price is None:
+        product_price = soup.select_one("div.price-area.product-detail__gap-sm>div.price.theme-money")
+    if product_price:
+        product_price = product_price.text.replace('\xa0', '').replace('€', '')
+        product_price = product_price.replace(',', '.')
+        product_price = float(product_price)
+    return product_title, product_price
+
+
 parsers = {
     "https://esprit-padel-shop.com/" : parse_universel,
     "https://www.frenchpadelshop.com/": parse_universel,
@@ -69,6 +83,6 @@ parsers = {
     "https://colizey.fr/": parse_universel,
     "https://padel-par4.com/": parse_padel_par_4,
     "https://www.padelnuestro.com/": parse_universel,
-    "https://www.padelkiwi.com/fr-fr/": parse_universel,
+    "https://www.padelkiwi.com/fr-fr/": parse_padel_kiwi,
     "https://sportlet.store/": parse_universel,
 }

@@ -41,6 +41,10 @@ Route::middleware('auth')->group(function(){
         Artisan::call('app:check-and-update-historique-prix');
         return response()->json(['message' => 'Prix synchronisés.']);
     })->name('sync-prix');
+
+    // Route déclenchée par le script python
+    Route::post('/services/controle-prix', [ServicesController::class, 'controleAlertePrix']);
+
 });
 
 Route::middleware('auth')->group(function(){

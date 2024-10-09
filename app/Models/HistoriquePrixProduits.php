@@ -11,6 +11,7 @@ class HistoriquePrixProduits extends Model
 
     protected $fillable = [
         'prix',
+        'is_below_srp',
         'produit_concurrent_id'
     ];
 

@@ -151,5 +151,9 @@ def main():
     driver.quit()
     clear_scraped_products()
 
+    response =  requests.post('https://concurrence.h-bp.fr/services/controle-prix')
+    if response.status_code == 200:
+        print('Analyse des tarifs terminée.')
+
 if __name__ == "__main__":
     main()

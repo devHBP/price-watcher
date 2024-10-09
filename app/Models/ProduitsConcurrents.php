@@ -12,13 +12,14 @@ class ProduitsConcurrents extends Model
     protected $fillable = [
         'url_produit',
         'prix_concurrent',
+        'is_below_srp',
         'designation_concurrent',
         'css_pick_prix',
         'css_pick_designation',
         'produit_id',
         'concurrent_id',
         'categorie_id',
-        'categorie_url_concurrent_id'
+        'categorie_url_concurrent_id',
     ];
 
     public function produit()

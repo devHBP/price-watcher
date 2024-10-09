@@ -44,6 +44,7 @@ class NotificationAlertePrix extends Notification
         foreach($this->alertes as $alerte){
             $mailMessage->line('Produit : ' . $alerte['produit'])
                         ->line('> ' . $alerte['texte'])
+                        ->line('PVP : ' . $alerte['pvp'] . '€')
                         ->line('Prix Minimum de vente: ' . $alerte['prix-minimum'] . '€')
                         ->line('**Prix Concurrent: '. $alerte['prix'] . '€**')
                         ->line('Voir le produit: [Lien vers le produit](' . $alerte['lien'] . ')')

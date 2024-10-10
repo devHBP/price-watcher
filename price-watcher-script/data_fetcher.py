@@ -151,9 +151,16 @@ def main():
     driver.quit()
     clear_scraped_products()
 
-    response =  requests.post('https://concurrence.h-bp.fr/services/controle-prix')
-    if response.status_code == 200:
-        print('Analyse des tarifs terminée.')
+    try:
+        response = requests.post('https://concurrence.h-bp.fr/services/controle-prix')
+        if response.status_code == 200:
+            print('Analyse des tarifs terminée.')
+        else:
+            print(f"Erreur HTTP: {response.status_code} - {response.text}")
+    except requests.exceptions.RequestException as e:
+        print(f"Erreur lors de l'appel de la route post : {e}")
+    except Exception as error:
+        print(f'Erreur : {error}')
 
 if __name__ == "__main__":
     main()

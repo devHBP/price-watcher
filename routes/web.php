@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProduitsConcurrentsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServicesController;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -44,7 +45,7 @@ Route::middleware('auth')->group(function(){
 });
 
 // Route déclenchée par le script python, sans middleware.
-Route::post('/services/controle-prix', [ServicesController::class, 'controleAlertePrix']);
+Route::post('/services/controle-prix', [ServicesController::class, 'controleAlertePrix'])->withoutMiddleware([VerifyCsrfToken::class]);
 
 Route::middleware('auth')->group(function(){
     // Route CRUD Produits, Categorie, Concurrents

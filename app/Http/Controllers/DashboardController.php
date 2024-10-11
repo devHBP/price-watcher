@@ -140,7 +140,7 @@ class DashboardController extends Controller
 
     public function getHistoriquePrixTest($produitId, $estFrancais)
     {
-        $dateDepart = Carbon::now()->subDays(8)->startofDay();
+        $dateDepart = Carbon::now()->subDays(7)->startofDay();
         $dateFin = Carbon::now()->endOfDay();
 
         $historique = HistoriquePrixProduits::whereHas('produitConcurrent', function($query) use ($produitId, $estFrancais) {
@@ -233,7 +233,7 @@ class DashboardController extends Controller
     
         foreach ($dateArray as $date) {
             foreach ($historique['structuredData'] as $concurrent => $prixData) {
-                $prixActuel = $prixData[$date] ?? null;
+                $prixActuel = $prixData[$date]["prix"] ?? null;
     
                 if ($prixActuel !== null && is_numeric($prixActuel)) {
                     if (isset($prixPrecedent[$concurrent])) {

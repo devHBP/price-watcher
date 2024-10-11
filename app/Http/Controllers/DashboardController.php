@@ -182,10 +182,12 @@ class DashboardController extends Controller
             }
     
             // Ajouter le prix pour la date donnée pour ce concurrent
-            $structuredData[$concurrent][$date] = [
-                "prix" => $historique->prix,
-                "outOfStock" => $historique->is_out_of_stock
-            ];
+            if(!isset($structuredData[$concurrent][$date])){
+                $structuredData[$concurrent][$date] = [
+                    "prix" => $historique->prix,
+                    "outOfStock" => $historique->is_out_of_stock
+                ];
+            }
         }
     
         // 3. S'assurer que chaque concurrent a des données pour les 7 derniers jours

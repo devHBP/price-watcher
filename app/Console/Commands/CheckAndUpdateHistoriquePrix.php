@@ -45,6 +45,8 @@ class CheckAndUpdateHistoriquePrix extends Command
             if($enregistrementExistant){
                 $enregistrementExistant->update([
                     'prix' => $produitConcurrent->prix_concurrent,
+                    'is_out_of_stock' => $produitConcurrent->is_out_of_stock,
+                    'is_below_srp' => $produitConcurrent->is_below_srp,
                     'updated_at' => Carbon::now(),
                 ]);
             }
@@ -52,6 +54,8 @@ class CheckAndUpdateHistoriquePrix extends Command
                 HistoriquePrixProduits::create([
                     'produit_concurrent_id' => $produitConcurrent->id,
                     'prix' => $produitConcurrent->prix_concurrent,
+                    'is_out_of_stock' => $produitConcurrent->is_out_of_stock,
+                    'is_below_srp' => $produitConcurrent->is_below_srp,
                     'created_at' => Carbon::now(),
                 ]);
             }

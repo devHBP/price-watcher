@@ -18,7 +18,9 @@ class HistoriquePrixProduitsController extends Controller
         foreach($produits as $produit){
             HistoriquePrixProduits::create([
                 'prix'=> $produit->prix_concurrent,
-                'produit_concurrent_id' => $produit->id
+                'produit_concurrent_id' => $produit->id,
+                'is_below_srp' => $produit->is_below_srp,
+                'is_out_of_stock' => $produit->is_out_of_stock
             ]);
         }
     }

@@ -111,6 +111,18 @@
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
                         </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="css_pick_badge_rupture">
+                                Css pour atteindre le Badge de rupture
+                            </label>
+                            <input id="css_pick_badge_rupture" type="text" name="css_pick_badge_rupture" value="{{ old('css_pick_badge_rupture', $produitConcurrent->css_pick_badge_rupture )}}" 
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
+                            @error('css_pick_badge_rupture')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <!-- Bouton de soumission -->
                         <div class="flex justify-end">
                             <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Mettre à jour</button>

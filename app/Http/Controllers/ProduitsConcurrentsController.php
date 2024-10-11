@@ -39,10 +39,14 @@ class ProduitsConcurrentsController extends Controller
         $urlConcurrent = $concurrent->categorieUrlConcurrent->first()->id;
         $cssDesignation = $concurrent->css_pick_designation;
         $cssPrix = $concurrent->css_pick_prix;
+        $cssBadgeRupture = $concurrent->css_pick_badge_rupture;
         
         $validatedData['categorie_url_concurrent_id'] = $urlConcurrent;
         $validatedData['css_pick_designation'] = $cssDesignation;
         $validatedData['css_pick_prix'] = $cssPrix;
+        $validatedData['css_pick_badge_rupture'] = $cssBadgeRupture;
+        // On pars du principe que si on ajoute un produit à tracker, c'est qu'il est en stock.
+        $validatedData['is_out_of_stock'] = false;
 
         $produitConcurrent = new ProduitsConcurrents($validatedData);
         $produitConcurrent->save();
@@ -71,6 +75,8 @@ class ProduitsConcurrentsController extends Controller
                 'url_produit' => 'required|string|max:255',
                 'css_pick_designation' =>'nullable|string|max:255',
                 'css_pick_prix' => 'nullable|string|max:255',
+                'css_pick_badge_rupture' => 'nullable|string|max:255',
+                'is_out_of_stock' => 'nullable|boolean',
             ]);
         }
         catch(\Illuminate\Validation\ValidationException $e){

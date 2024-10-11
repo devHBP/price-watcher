@@ -70,7 +70,6 @@ class DashboardController extends Controller
 
         $historiquePrixNf = $this->getHistoriquePrixTest($selectedProduit->id, false);
         $variationsNf = $this->calculVariation($historiquePrixFr);
-        
         return view('dashboard.test', compact(
             'variationsFr',
             'categories',
@@ -183,7 +182,10 @@ class DashboardController extends Controller
             }
     
             // Ajouter le prix pour la date donnée pour ce concurrent
-            $structuredData[$concurrent][$date] = $historique->prix;
+            $structuredData[$concurrent][$date] = [
+                "prix" => $historique->prix,
+                "outOfStock" => $historique->is_out_of_stock
+            ];
         }
     
         // 3. S'assurer que chaque concurrent a des données pour les 7 derniers jours
@@ -191,7 +193,10 @@ class DashboardController extends Controller
             foreach ($dates as $date) {
                 // Si une date est manquante pour ce concurrent, la remplir avec une valeur par défaut
                 if (!isset($data[$date])) {
-                    $structuredData[$concurrent][$date] = '-'; // Valeur par défaut si une date est manquante
+                    $structuredData[$concurrent][$date] = [
+                        "prix" => '-',
+                        "outOfStock" => '-',
+                    ];
                 }
             }
     
@@ -204,7 +209,10 @@ class DashboardController extends Controller
             $concurrent = $historique->produitConcurrent->concurrent->nom;
     
             if (!isset($structuredData[$concurrent])) {
-                $structuredData[$concurrent] = array_fill_keys($dates, '-');
+                $structuredData[$concurrent] = array_fill_keys($dates, [
+                    'prix' => '-',
+                    'outOfStock' => '-' 
+                ]);
             }
         }
     

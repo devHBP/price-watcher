@@ -8,14 +8,14 @@ import time
 import requests
 
 
-def scrape_with_requests(url, parser, parser_designation, parser_prix):
+def scrape_with_requests(url, parser, parser_designation, parser_prix, parser_badge_rupture):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.137 Safari/537.36'
     }
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'html.parser')
-    designation, prix = parser(soup, parser_designation, parser_prix)
-    return designation, prix
+    designation, prix, is_out_of_stock = parser(soup, parser_designation, parser_prix, parser_badge_rupture)
+    return designation, prix, is_out_of_stock
 
 
 def log_scrapped_product(designation, prix, position, total):
@@ -49,7 +49,7 @@ def fetch_product_data():
     cursors = connection.cursor(dictionary=True)
 
     query = """
-        SELECT pc.url_produit, pc.css_pick_designation, pc.css_pick_prix, pc.id, cuc.url_complement as categorie_url, c.url as concurrent_url
+        SELECT pc.url_produit, pc.css_pick_designation, pc.css_pick_prix, pc.css_pick_badge_rupture, pc.id, cuc.url_complement as categorie_url, c.url as concurrent_url
         FROM produits_concurrents pc
         JOIN categories_url_concurrents cuc ON pc.categorie_url_concurrent_id = cuc.id
         JOIN concurrents c ON pc.concurrent_id = c.id
@@ -70,17 +70,17 @@ def compose_full_url(concurrent_url, categorie_url, url_produit):
     return f"{concurrent_url}{categorie_url}{url_produit}"
 
 
-def update_product_data(id_produit, prix, designation):
+def update_product_data(id_produit, prix, designation, is_out_of_stock):
     connection = get_db_connection()
     cursors = connection.cursor()
 
     query = """
         UPDATE produits_concurrents
-        SET prix_concurrent = %s, designation_concurrent = %s, updated_at = %s
+        SET prix_concurrent = %s, designation_concurrent = %s, updated_at = %s, is_out_of_stock = %s
         WHERE id = %s
     """
 
-    cursors.execute(query, (prix, designation, datetime.now(), id_produit))
+    cursors.execute(query, (prix, designation, datetime.now(), is_out_of_stock, id_produit))
     connection.commit()
 
     cursors.close()
@@ -123,15 +123,16 @@ def main():
         full_url = compose_full_url(product['concurrent_url'], product['categorie_url'], product['url_produit'])
         parser_designation = product['css_pick_designation']
         parser_prix = product['css_pick_prix']
+        parser_badge_rupture = product['css_pick_badge_rupture']
 
         if 'raquette-padel.com' in base_url or 'sportlet.store' in base_url:
             try:
                 time.sleep(2)
-                designation, prix = scrape_with_requests(full_url, parser, parser_designation, parser_prix)
-                update_product_data(product['id'], prix, designation)
+                designation, prix, is_out_of_stock = scrape_with_requests(full_url, parser, parser_designation, parser_prix, parser_badge_rupture)
+                update_product_data(product['id'], prix, designation, is_out_of_stock)
                 log_scrapped_product(designation, prix, index, total_products)
                 print("Passage dans le scrapping basique")
-                print(designation, prix)
+                print(designation, prix, is_out_of_stock)
             except Exception as error:
                 print(f"Erreur lors du traitement de {full_url} avec requests: {str(error)}")
         else:
@@ -141,10 +142,10 @@ def main():
                 
                 page_source = driver.page_source
                 soup = BeautifulSoup(page_source, 'html.parser')
-                designation, prix = parser(soup, parser_designation, parser_prix)
-                update_product_data(product['id'], prix, designation)
+                designation, prix , is_out_of_stock= parser(soup, parser_designation, parser_prix, parser_badge_rupture)
+                update_product_data(product['id'], prix, designation, is_out_of_stock)
                 log_scrapped_product(designation, prix, index, total_products)
-                print(designation, prix)
+                print(designation, prix, is_out_of_stock)
             except Exception as error:
                 print(f"Erreur lors du traitement de {full_url}: {str(error)}")
 

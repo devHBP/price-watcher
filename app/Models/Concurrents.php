@@ -14,7 +14,8 @@ class Concurrents extends Model
         'url',
         'est_francais',
         'css_pick_designation',
-        'css_pick_prix'
+        'css_pick_prix',
+        'css_pick_badge_rupture'
     ];
 
     public function categorieUrlConcurrent()

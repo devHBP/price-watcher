@@ -1,21 +1,25 @@
 
 # Parsing basique la décompo est simple est basique 
 # Concerne esprit padel, french padel, padel xp, extrem padel, avantage padel
-def parse_universel(soup, designation, prix):
+def parse_universel(soup, designation, prix, badge):
     product_title = soup.select_one(designation)
     product_price = soup.select_one(prix)
+    product_badge_rupture = soup.select_one(badge)
     if product_title:
         product_title = product_title.text
     if product_price:
         product_price = product_price.text.replace('\xa0', '').replace('€', '')
         product_price = product_price.replace(',', '.')
         product_price = float(product_price)
-    return product_title, product_price
+    # Ternaire en python qui pique les yeux
+    is_out_of_stock = 1 if product_badge_rupture else 0
+    return product_title, product_price, is_out_of_stock
 
 # OK
-def parse_padel_reference(soup, designation, prix):
+def parse_padel_reference(soup, designation, prix, badge):
     product_title = soup.select_one(designation)
     product_price = soup.select_one(prix)
+    product_badge_rupture = soup.select_one(badge)
     # Nettoyage de la chaine de caractère "Raquette de padel\n                                                                NOX AT10 Pro Cup Genius 2024" Oo"
     if product_title:
         title = " ".join(product_title.text.split())
@@ -26,7 +30,9 @@ def parse_padel_reference(soup, designation, prix):
         product_price = product_price.strip()
         product_price = product_price.replace(',', '.')
         product_price = float(product_price)
-    return product_title, product_price
+    is_out_of_stock = 1 if product_badge_rupture else 0
+
+    return product_title, product_price, is_out_of_stock
 
 """
     Chez padel_par_4 le prix est contenu dans une span qui contient une autre span ex :
@@ -35,11 +41,12 @@ def parse_padel_reference(soup, designation, prix):
     "XXX,XX€"
     </span>
     Pour contourner ça, on récupère le text complet, on nettoit les espaces inutile
-    et on fait une recherche dans la string à l'ai de de la regex.  
+    et on fait une recherche dans la string à l'aide de la regex.  
 """
-def parse_padel_par_4(soup, designation, prix):
+def parse_padel_par_4(soup, designation, prix, badge):
     product_title = soup.select_one(designation)
     product_price = soup.select_one(prix)
+    product_badge_rupture = soup.select_one(badge)
     if product_title:
         product_title = product_title.text
     
@@ -57,11 +64,13 @@ def parse_padel_par_4(soup, designation, prix):
         else:
             print(f"Erreur sur le traitement du prix..")
             
-    return product_title, product_price
+    is_out_of_stock = 1 if product_badge_rupture else 0
+    return product_title, product_price, is_out_of_stock
 
-def parse_padel_kiwi(soup, designation, prix):
+def parse_padel_kiwi(soup, designation, prix, badge):
     product_title = soup.select_one(designation)
     product_price = soup.select_one(prix)
+    product_badge_rupture = soup.select_one(badge)
     if product_title:
         product_title = product_title.text
     if product_price is None:
@@ -70,7 +79,8 @@ def parse_padel_kiwi(soup, designation, prix):
         product_price = product_price.text.replace('\xa0', '').replace('€', '')
         product_price = product_price.replace(',', '.')
         product_price = float(product_price)
-    return product_title, product_price
+    is_out_of_stock = 1 if product_badge_rupture else 0
+    return product_title, product_price, is_out_of_stock
 
 
 parsers = {

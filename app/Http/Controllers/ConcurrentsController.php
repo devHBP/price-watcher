@@ -21,6 +21,7 @@ class ConcurrentsController extends Controller
             'est_francais' => 'required|boolean',
             'css_pick_designation' => 'nullable|string',
             'css_pick_prix' => 'nullable|string',
+            'css_pick_badge_rupture' => 'nullable|string'
         ]);
 
         $concurrent = new Concurrents($validatedData);
@@ -40,7 +41,8 @@ class ConcurrentsController extends Controller
             'url' => 'required|string',
             'est_francais' => 'required|boolean',
             'css_pick_designation' => 'nullable|string',
-            'css_pick_prix' => 'nullable|string'
+            'css_pick_prix' => 'nullable|string',
+            'css_pick_badge_rupture' => 'nullable|string'
         ]);
         // Cas où le CSS pick vient à être rempli 
         $cssUpdates = [];
@@ -50,6 +52,10 @@ class ConcurrentsController extends Controller
         if(!empty($request->input('css_pick_prix'))){
             $cssUpdates['css_pick_prix'] = $request->input('css_pick_prix');
         }
+        if(!empty($request->input('css_pick_badge_rupture'))){
+            $cssUpdates['css_pick_badge_rupture'] = $request->input('css_pick_badge_rupture');
+        }
+
         // Si au moins un des deux champs est rempli on viens appliquer une mise à jour à la volée
         if(!empty($cssUpdates)){
             ProduitsConcurrents::where('concurrent_id', $concurrent->id)->update($cssUpdates);

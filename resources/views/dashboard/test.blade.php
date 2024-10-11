@@ -52,9 +52,10 @@
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">{{ $concurrent }}</td>
                                     @foreach($historiquePrixFr['dates'] as $date)
+                                        
                                         @php
-                                            $price = $data[$date] ?? '-';
-                                            
+                                            $price = isset($data[$date]['prix']) ? $data[$date]['prix'] : '-';
+                                            $isOutOfStock = isset($data[$date]['outOfStock']) ? $data[$date]['outOfStock'] : 'N/C';
                                             // Initialiser les variables
                                             $prevPrice = null;
                                             $currentDate = \Carbon\Carbon::createFromFormat('d-m', $date)->startOfDay();
@@ -83,8 +84,10 @@
                                                 $arrow = '—'; // Symbole pour indiquer l'absence de données
                                                 $color = 'text-gray-500'; // Couleur neutre
                                             }
+
+                                            $bgColor = ($isOutOfStock) ? 'bg-gray-200 opacity-50' : '' ;
                                         @endphp
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 {{ $color }}">{{ $data[$date] ?? '-' }} {{ $arrow }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 {{ $color }} {{ $bgColor }}">{{ $price ?? '-' }} {{ $arrow }}</td>
                                     @endforeach
                                 </tr>
                             @endforeach

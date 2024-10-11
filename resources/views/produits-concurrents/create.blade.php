@@ -101,6 +101,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Dernière MaJ</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID Produit</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pick CSS</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">En stock</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Edit</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Suppr.</th>
                         </tr>
@@ -108,20 +109,25 @@
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach ($produitsConcurrents as $produit)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $produit->id }}</td>
+                                <td class="px-6 py-4 whitespace-wrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $produit->id }}</td>
                                 <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300"><a href="
-                                {{$produit->concurrent->url . $produit->categorieUrlConcurrent->url_complement . $produit->url_produit }}">{{ $produit->designation_concurrent }}</a></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->prix_concurrent }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->concurrent->nom }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->categorie->nom }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->updated_at }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->produit->id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    @if (!empty($produit->css_pick_designation && $produit->css_pick_prix))
+                                {{$produit->concurrent->url . $produit->categorieUrlConcurrent->url_complement . $produit->url_produit }}" target="_blank" rel="noreferrer noopener">{{ $produit->designation_concurrent }}</a></td>
+                                <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->prix_concurrent }}</td>
+                                <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->concurrent->nom }}</td>
+                                <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->categorie->nom }}</td>
+                                <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->updated_at }}</td>
+                                <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->produit->id }}</td>
+                                <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">
+                                    @if (!empty($produit->css_pick_designation && $produit->css_pick_prix && $produit->css_pick_badge_rupture))
                                         <span class="text-green-500">&#10003;</span>
                                     @else
                                         <span class="text-red-500">&#10539;</span>
                                     @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                    @if($produit->is_out_of_stock) <span class="text-red-500">&#10539;</span>
+                                    @else <span class="text-green-500">&#10003;</span>
+                                    @endif 
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="{{ route('produits-concurrents.edit', $produit->id) }}">

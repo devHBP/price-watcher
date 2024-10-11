@@ -10,6 +10,7 @@
                 @foreach ($historiques as $key => $historique)
                     <li class="flex justify-between">
                         <span>{{ $key }} / {{ $historique->id }}</span>
+                        <span>{{ $historique->prix }}</span>
                         <span>{{ $historique->produitConcurrent->designation_concurrent }}</span>
                         <span>{{ $historique->produitConcurrent->created_at }}</span>
                         <span>{{ $historique->updated_at}}</span> 

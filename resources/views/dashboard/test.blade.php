@@ -66,8 +66,8 @@
                                             // Chercher la dernière entrée de prix dans les jours précédents
                                             for ($i = 0; $i < $limitDays; $i++) {
                                                 $prevDateFormatted = $searchDate->format('d-m');
-                                                if (isset($historiquePrixFr['structuredData'][$concurrent][$prevDateFormatted])) {
-                                                    $prevPrice = $historiquePrixFr['structuredData'][$concurrent][$prevDateFormatted];
+                                                if (isset($historiquePrixFr['structuredData'][$concurrent][$prevDateFormatted]['prix'])) {
+                                                    $prevPrice = $historiquePrixFr['structuredData'][$concurrent][$prevDateFormatted]['prix'];
                                                     $found = true;
                                                     break;
                                                 }
@@ -129,8 +129,8 @@
                                             // Chercher la dernière entrée de prix dans les jours précédents
                                             for ($i = 0; $i < $limitDays; $i++) {
                                                 $prevDateFormatted = $searchDate->format('d-m');
-                                                if (isset($historiquePrixNf['structuredData'][$concurrent][$prevDateFormatted])) {
-                                                    $prevPrice = $historiquePrixNf['structuredData'][$concurrent][$prevDateFormatted];
+                                                if (isset($historiquePrixNf['structuredData'][$concurrent][$prevDateFormatted]['prix'])) {
+                                                    $prevPrice = $historiquePrixNf['structuredData'][$concurrent][$prevDateFormatted]['prix'];
                                                     $found = true;
                                                     break;
                                                 }

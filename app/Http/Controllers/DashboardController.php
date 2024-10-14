@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use App\Models\HistoriquePrixProduits;
 use App\Models\Produits;
+use App\Models\ProduitsConcurrents;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -65,6 +66,8 @@ class DashboardController extends Controller
         $produits = $selectedCategorie ? Produits::where('categorie_id', $selectedCategorie->id)->get() : [] ;
 
         $selectedProduit = $produits->first();
+        $produitsConcurrents = ProduitsConcurrents::where('produit_id', $selectedProduit->id)->get();
+
         $historiquePrixFr = $this->getHistoriquePrixTest($selectedProduit->id, true);
         $variationsFr = $this->calculVariation($historiquePrixFr);
 
@@ -119,7 +122,7 @@ class DashboardController extends Controller
         $selectedProduit = $produit;
         $selectedCategorie = $produit->categorie;
         $produits = Produits::where('categorie_id', $selectedCategorie->id)->get();
-        
+
         $historiquePrixFr = $this->getHistoriquePrixTest($selectedProduit->id, true);
         $variationsFr = $this->calculVariation($historiquePrixFr);
 
@@ -172,38 +175,44 @@ class DashboardController extends Controller
         // 2. Construire les données structurées avec les dates disponibles
         foreach ($historiques as $historique) {
             $date = $historique->created_at->format('d-m');
-    
+            
+            // Utiliser une seule fois la relation concurrent et sauvegarde dans une variable.
+            $produitConcurrent = $historique->produitConcurrent;
             // Extraire le nom du concurrent
-            $concurrent = $historique->produitConcurrent->concurrent->nom;
-    
+            $concurrentNom = $produitConcurrent->concurrent->nom;
+
+            // Extraire le lien pour la derniere case de chaque concurrents. 
+            $lienProduit = "{$produitConcurrent->concurrent->url}{$produitConcurrent->categorieUrlConcurrent->url_complement}{$produitConcurrent->url_produit}";
             // Initialiser le tableau pour ce concurrent s'il n'existe pas encore
-            if (!isset($structuredData[$concurrent])) {
-                $structuredData[$concurrent] = [];
+            if (!isset($structuredData[$concurrentNom])) {
+                $structuredData[$concurrentNom] = [];
             }
     
             // Ajouter le prix pour la date donnée pour ce concurrent
-            if(!isset($structuredData[$concurrent][$date])){
-                $structuredData[$concurrent][$date] = [
+            if(!isset($structuredData[$concurrentNom][$date])){
+                $structuredData[$concurrentNom][$date] = [
                     "prix" => $historique->prix,
-                    "outOfStock" => $historique->is_out_of_stock
+                    "outOfStock" => $historique->is_out_of_stock,
+                    "url" => $lienProduit
                 ];
             }
         }
     
         // 3. S'assurer que chaque concurrent a des données pour les 7 derniers jours
-        foreach ($structuredData as $concurrent => $data) {
+        foreach ($structuredData as $concurrentNom => $data) {
             foreach ($dates as $date) {
                 // Si une date est manquante pour ce concurrent, la remplir avec une valeur par défaut
                 if (!isset($data[$date])) {
-                    $structuredData[$concurrent][$date] = [
+                    $structuredData[$concurrentNom][$date] = [
                         "prix" => '-',
                         "outOfStock" => '-',
+                        "url" => '',
                     ];
                 }
             }
     
             // Réordonner les données par date (pour avoir les dates dans l'ordre chronologique)
-            ksort($structuredData[$concurrent]);
+            ksort($structuredData[$concurrentNom]);
         }
     
         // 4. Si des concurrents sont complètement absents du tableau, ajouter des valeurs vides pour eux
@@ -213,7 +222,8 @@ class DashboardController extends Controller
             if (!isset($structuredData[$concurrent])) {
                 $structuredData[$concurrent] = array_fill_keys($dates, [
                     'prix' => '-',
-                    'outOfStock' => '-' 
+                    'outOfStock' => '-',
+                    'url' => ''
                 ]);
             }
         }

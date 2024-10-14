@@ -56,6 +56,8 @@
                                         @php
                                             $price = isset($data[$date]['prix']) ? $data[$date]['prix'] : '-';
                                             $isOutOfStock = isset($data[$date]['outOfStock']) ? $data[$date]['outOfStock'] : 'N/C';
+                                            $url = isset($data[$date]['url']) ? $data[$date]['url'] : '#';
+
                                             // Initialiser les variables
                                             $prevPrice = null;
                                             $currentDate = \Carbon\Carbon::createFromFormat('d-m', $date)->startOfDay();
@@ -86,8 +88,11 @@
                                             }
 
                                             $bgColor = ($isOutOfStock) ? 'bg-gray-200 opacity-50' : '' ;
+
                                         @endphp
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 {{ $color }} {{ $bgColor }}">{{ $price ?? '-' }} {{ $arrow }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 {{ $color }} {{ $bgColor }}">
+                                            <a href="{{ $url }}" target="_blank" rel="noreferrer noopener">{{ $price ?? '-' }} {{ $arrow }}</a>
+                                        </td>
                                     @endforeach
                                 </tr>
                             @endforeach
@@ -118,6 +123,7 @@
                                         @php
                                             $price = isset($data[$date]['prix']) ? $data[$date]['prix'] : '-';
                                             $isOutOfStock = isset($data[$date]['outOfStock']) ? $data[$date]['outOfStock'] : 'N/C';
+                                            $url = isset($data[$date]['url']) ? $data[$date]['url'] : '#';
                                             
                                             // Initialiser les variables
                                             $prevPrice = null;
@@ -150,7 +156,8 @@
 
                                             $bgColor = ($isOutOfStock) ? 'bg-gray-200 opacity-50' : '' ;
                                         @endphp
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 {{ $color }} {{ $bgColor }}">{{ $price ?? '-' }} {{ $arrow }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 {{ $color }} {{ $bgColor }}">
+                                            <a href="{{ $url }}">{{ $price ?? '-' }} {{ $arrow }}</a></td>
                                     @endforeach
                                 </tr>
                             @endforeach

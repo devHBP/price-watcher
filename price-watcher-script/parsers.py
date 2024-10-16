@@ -91,8 +91,6 @@ def parse_padel_kiwi(soup, designation, prix, badge):
 
     if product_price is None:
         product_price = soup.select_one("div.price-area.product-detail__gap-sm>div.price.theme-money")
-    else:
-        product_price = float(0)
 
     if product_price:
         product_price = product_price.text.replace('\xa0', '').replace('€', '')

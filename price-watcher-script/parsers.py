@@ -16,7 +16,7 @@ def parse_universel(soup, designation, prix, badge):
     else:
         product_price = float(0)
     # Ternaire en python qui pique les yeux
-    is_out_of_stock = 1 if product_badge_rupture else 0
+    is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0
     return product_title, product_price, is_out_of_stock
 
 # OK
@@ -38,8 +38,9 @@ def parse_padel_reference(soup, designation, prix, badge):
         product_price = float(product_price)
     else:
         product_price = float(0)
-    is_out_of_stock = 1 if product_badge_rupture else 0
-
+    
+    is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0
+    
     return product_title, product_price, is_out_of_stock
 
 """
@@ -76,7 +77,7 @@ def parse_padel_par_4(soup, designation, prix, badge):
     else:
         product_price = float(0)
 
-    is_out_of_stock = 1 if product_badge_rupture else 0
+    is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0
     return product_title, product_price, is_out_of_stock
 
 def parse_padel_kiwi(soup, designation, prix, badge):
@@ -100,7 +101,7 @@ def parse_padel_kiwi(soup, designation, prix, badge):
     else:
         product_price = float(0)
 
-    is_out_of_stock = 1 if product_badge_rupture else 0
+    is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0
     return product_title, product_price, is_out_of_stock
 
 

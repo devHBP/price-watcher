@@ -63,7 +63,12 @@ class DashboardController extends Controller
         // On selection la catégorie par default , la première
         $selectedCategorie = $categories->first();
 
-        $produits = $selectedCategorie ? Produits::where('categorie_id', $selectedCategorie->id)->get() : [] ;
+        $produits = $selectedCategorie 
+            ? Produits::where('categorie_id', $selectedCategorie->id)
+                ->withCount('produitsConcurrents')
+                ->orderBy('produits_concurrents_count', 'desc')
+                ->get() 
+            : [] ;
 
         $selectedProduit = $produits->first();
         $produitsConcurrents = ProduitsConcurrents::where('produit_id', $selectedProduit->id)->get();
@@ -89,7 +94,10 @@ class DashboardController extends Controller
     {
         $categories = Categories::all();
         $selectedCategorie = $categorie;
-        $produits = Produits::where('categorie_id', $selectedCategorie->id)->get();
+        $produits = Produits::where('categorie_id', $selectedCategorie->id)
+            ->withCount('produitsConcurrents')
+            ->orderBy('produits_concurrents_count', 'desc')
+            ->get();
         $selectedProduit = new Produits(['designation' => 'Produit non trouvé']);
         
         $historiquePrixFr = [];
@@ -121,7 +129,11 @@ class DashboardController extends Controller
         $categories = Categories::all();
         $selectedProduit = $produit;
         $selectedCategorie = $produit->categorie;
-        $produits = Produits::where('categorie_id', $selectedCategorie->id)->get();
+        
+        $produits = Produits::where('categorie_id', $selectedCategorie->id)
+            ->withCount('produitsConcurrents')
+            ->orderBy('produits_concurrents_count', 'desc')
+            ->get();
 
         $historiquePrixFr = $this->getHistoriquePrixTest($selectedProduit->id, true);
         $variationsFr = $this->calculVariation($historiquePrixFr);

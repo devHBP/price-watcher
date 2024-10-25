@@ -17,6 +17,22 @@
             </div>
         </div>
     </x-slot>
+    <div class="mb-4 mt-5 mr-5 ml-5 text-center">
+        <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="produit_select">
+            Sélectionnez un produit :
+        </label>
+        <select id="produit_select" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline" onchange="location = this.value;">
+            @if(!empty($produits))
+                @foreach ($produits as $produit)
+                    <option class="text-center" value="{{ route('dashboard.changeProduit', $produit->id) }}" {{ $produit->id == $selectedProduit->id ? 'selected' : '' }}>
+                        {{ $produit->designation }} ({{ $produit->produits_concurrents_count }} suivis)
+                    </option>
+                @endforeach
+            @else
+                <option disabled>Pas de produits disponible pour la catégorie : {{ $selectedCategorie->nom }}</option>
+            @endif
+        </select>
+    </div>
 
     <div class="flex flex-col md:flex-row p-4 space-x-4">
         <!-- Panneau latéral pour les catégories (1/4 de l'espace) -->
@@ -169,7 +185,7 @@
             @endif
         </div>
     </div>
-    <div class="flex flex-wrap space-x-2 justify-center">
+    {{-- <div class="flex flex-wrap space-x-2 justify-center">
         @if(!empty($produits))
             @foreach ($produits as $produit)
                 <a href="{{ route('dashboard.changeProduit', $produit->id) }}" class="m-2 px-4 py-2 rounded-full cursor-pointer {{ $produit->id == $selectedProduit->id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}}">
@@ -179,5 +195,5 @@
         @else
             <p>Pas de produits disponible pour la catégorie : {{ $selectedCategorie->nom }}</p>
         @endif
-    </div>
+    </div> --}}
 </x-app-layout>

@@ -24,6 +24,11 @@ class Produits extends Model
         return $this->hasMany(ProduitsConcurrents::class, "produit_id");
     }
 
+    public function produitsConcurrents()
+    {
+        return $this->hasMany(ProduitsConcurrents::class, 'produit_id');
+    }
+
     public function categorie()
     {
         return $this->belongsTo(Categories::class);

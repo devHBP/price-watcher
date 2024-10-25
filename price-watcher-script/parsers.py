@@ -121,6 +121,29 @@ def parse_padel_avenue(soup, designation, prix, badge):
     is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0
     return product_title, product_price, is_out_of_stock
 
+def parse_padel_nuestro(soup, designation, prix, badge):
+    product_title = soup.select_one(designation)
+    product_price = soup.select_one(prix)
+    product_badge_rupture = soup.select_one(badge)
+    if product_title:
+        product_title = product_title.text
+    else:
+        product_title = "Produit introuvable ou retiré."
+    if not product_price:
+        # Version ou le produit n'a pas de promotions ect .. une span en moins dans l'arbo :/
+        product_price = soup.select_one('div.product-info-price>div.price-box>span>span>span.price')
+    else:
+        product_price = float(0)
+    
+    # Traitement de product_price avant d'être retourn en DB
+    product_price = product_price.text.replace('\xa0', '').replace('€', '')
+    product_price = product_price.replace(',', '.')
+    product_price = float(product_price)
+    
+    # Ternaire en python qui pique les yeux
+    is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0
+    return product_title, product_price, is_out_of_stock
+
 parsers = {
     "https://esprit-padel-shop.com/" : parse_universel,
     "https://www.frenchpadelshop.com/": parse_universel,
@@ -130,7 +153,7 @@ parsers = {
     "https://www.raquette-padel.com/": parse_universel,
     "https://colizey.fr/": parse_universel,
     "https://padel-par4.com/": parse_padel_par_4,
-    "https://www.padelnuestro.com/": parse_universel,
+    "https://www.padelnuestro.com/": parse_padel_nuestro,
     "https://www.padelkiwi.com/fr-fr/": parse_padel_kiwi,
     "https://sportlet.store/": parse_universel,
     "https://padelavenue.fr/" : parse_padel_avenue,

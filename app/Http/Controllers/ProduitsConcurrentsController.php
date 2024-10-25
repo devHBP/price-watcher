@@ -30,7 +30,7 @@ class ProduitsConcurrentsController extends Controller
                 'concurrent_id' => 'required|exists:concurrents,id',
                 'categorie_id' => 'required|exists:categories,id',
                 'url_produit' => 'required|string|max:255',
-                'is_active' => 'required|boolean',
+                'is_active' => 'required|boolean:0,1,true,false',
             ]);
         }
         catch(\Illuminate\Validation\ValidationException $e){

@@ -65,7 +65,9 @@ class DashboardController extends Controller
 
         $produits = $selectedCategorie 
             ? Produits::where('categorie_id', $selectedCategorie->id)
-                ->withCount('produitsConcurrents')
+                ->withCount(['produitsConcurrents' => function ($query){
+                    $query->where('is_active', true);
+                }])
                 ->orderBy('produits_concurrents_count', 'desc')
                 ->get() 
             : [] ;
@@ -95,7 +97,9 @@ class DashboardController extends Controller
         $categories = Categories::all();
         $selectedCategorie = $categorie;
         $produits = Produits::where('categorie_id', $selectedCategorie->id)
-            ->withCount('produitsConcurrents')
+            ->withCount((['produitsConcurrents' => function ($query){
+                $query->where('is_active', true);
+            }]))
             ->orderBy('produits_concurrents_count', 'desc')
             ->get();
         $selectedProduit = new Produits(['designation' => 'Produit non trouvé']);
@@ -131,7 +135,9 @@ class DashboardController extends Controller
         $selectedCategorie = $produit->categorie;
         
         $produits = Produits::where('categorie_id', $selectedCategorie->id)
-            ->withCount('produitsConcurrents')
+            ->withCount((['produitsConcurrents' => function ($query){
+                $query->where('is_active', true);
+            }]))
             ->orderBy('produits_concurrents_count', 'desc')
             ->get();
 

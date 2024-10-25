@@ -86,8 +86,8 @@
                                 Etat du tracking
                             </label>
                             <select name="is_active" id="is_active" value="{{ old('is_active') }}" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
-                                <option value="true">Actif</option>
-                                <option value="false">Inactif</option>
+                                <option value="1">Actif</option>
+                                <option value="0">Inactif</option>
                             </select>
                             @error('is_active')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>

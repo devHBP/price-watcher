@@ -53,6 +53,7 @@ def fetch_product_data():
         FROM produits_concurrents pc
         JOIN categories_url_concurrents cuc ON pc.categorie_url_concurrent_id = cuc.id
         JOIN concurrents c ON pc.concurrent_id = c.id
+        WHERE pc.is_active = true
     """
     cursors.execute(query)
     products = cursors.fetchall()

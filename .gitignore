@@ -20,3 +20,4 @@ yarn-error.log
 /.vscode
 /price-watcher-script/venv
 /price-watcher-script/__pycache__/*
+*.DS_Store

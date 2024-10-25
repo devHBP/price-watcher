@@ -102,6 +102,23 @@ def parse_padel_kiwi(soup, designation, prix, badge):
     is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0
     return product_title, product_price, is_out_of_stock
 
+def parse_padel_avenue(soup, designation, prix, badge):
+    product_title = soup.select_one(designation)
+    product_price = soup.select_one(prix)
+    product_badge_rupture = soup.select_one(badge)
+
+    if(product_title):
+        product_title = product_title.text
+    else:
+        product_title = "Produit introuvable ou retiré."
+
+    if(product_price):
+        # Nettoyage de la chaine de caractere qui contient un saut de ligne , un € avant le prix , un EUR après
+        product_price = product_price.text.replace('€', '').replace('EUR', '').replace('\xa0', '')
+        product_price = product_price.strip()
+
+    is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0
+    return product_title, product_price, is_out_of_stock
 
 parsers = {
     "https://esprit-padel-shop.com/" : parse_universel,
@@ -115,4 +132,6 @@ parsers = {
     "https://www.padelnuestro.com/": parse_universel,
     "https://www.padelkiwi.com/fr-fr/": parse_padel_kiwi,
     "https://sportlet.store/": parse_universel,
+    "https://padelavenue.fr/" : parse_padel_avenue,
+    "https://www.stockpadel.com/fr/" : parse_universel,
 }

@@ -81,6 +81,19 @@
                             @enderror
                         </div>
 
+                        <div class="mb-4">
+                            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="is_active">
+                                Etat du tracking
+                            </label>
+                            <select name="is_active" id="is_active" value="{{ old('is_active') }}" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="true">Actif</option>
+                                <option value="false">Inactif</option>
+                            </select>
+                            @error('is_active')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <div class="flex items-center justify-between">
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                 Ajouter
@@ -108,10 +121,14 @@
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach ($produitsConcurrents as $produit)
-                            <tr>
+                            @if (!$produit->is_active)
+                                <tr class="text-gray-400 bg-gray-200">
+                            @else
+                                <tr>
+                            @endif
                                 <td class="px-6 py-4 whitespace-wrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $produit->id }}</td>
                                 <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300"><a href="
-                                {{$produit->concurrent->url . $produit->categorieUrlConcurrent->url_complement . $produit->url_produit }}" target="_blank" rel="noreferrer noopener">{{ $produit->designation_concurrent }}</a></td>
+                                {{ $produit->concurrent->url . $produit->categorieUrlConcurrent->url_complement . $produit->url_produit }}" target="_blank" rel="noreferrer noopener">{{ $produit->designation_concurrent }}</a></td>
                                 <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->prix_concurrent }}</td>
                                 <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->concurrent->nom }}</td>
                                 <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 dark:text-gray-300">{{ $produit->categorie->nom }}</td>
@@ -147,6 +164,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{ $produitsConcurrents->links() }}
             </div>
         </div>
     </div>

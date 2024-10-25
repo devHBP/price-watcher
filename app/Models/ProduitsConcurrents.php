@@ -22,6 +22,7 @@ class ProduitsConcurrents extends Model
         'concurrent_id',
         'categorie_id',
         'categorie_url_concurrent_id',
+        'is_active',
     ];
 
     public function produit()

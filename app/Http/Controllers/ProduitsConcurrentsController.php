@@ -14,7 +14,7 @@ class ProduitsConcurrentsController extends Controller
     public function create()
     {
         return view('produits-concurrents.create', [ 
-            "produitsConcurrents" => ProduitsConcurrents::all(),
+            "produitsConcurrents" => ProduitsConcurrents::orderBy('is_active', 'desc')->orderBy('concurrent_id', 'asc')->paginate(25)->appends(request()->query()),
             "produits" => Produits::all(),
             "categories" => Categories::all(),
             "concurrents" => Concurrents::all(),
@@ -30,6 +30,7 @@ class ProduitsConcurrentsController extends Controller
                 'concurrent_id' => 'required|exists:concurrents,id',
                 'categorie_id' => 'required|exists:categories,id',
                 'url_produit' => 'required|string|max:255',
+                'is_active' => 'required|boolean',
             ]);
         }
         catch(\Illuminate\Validation\ValidationException $e){
@@ -77,12 +78,12 @@ class ProduitsConcurrentsController extends Controller
                 'css_pick_prix' => 'nullable|string|max:255',
                 'css_pick_badge_rupture' => 'nullable|string|max:255',
                 'is_out_of_stock' => 'nullable|boolean',
+                'is_active' => 'required|boolean:0,1,true,false',
             ]);
         }
         catch(\Illuminate\Validation\ValidationException $e){
             dd($e->errors());
         }
-        
         $produitConcurrent->update($validatedData);
         return redirect()->route('produits-concurrents.create')->with('success', 'Produit modifié !'); 
     }

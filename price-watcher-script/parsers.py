@@ -114,8 +114,9 @@ def parse_padel_avenue(soup, designation, prix, badge):
 
     if(product_price):
         # Nettoyage de la chaine de caractere qui contient un saut de ligne , un € avant le prix , un EUR après
-        product_price = product_price.text.replace('€', '').replace('EUR', '').replace('\xa0', '')
+        product_price = product_price.text.replace('€', '').replace('EUR', '').replace('\xa0', '').replace(',', '.')
         product_price = product_price.strip()
+        product_price = float(product_price)
 
     is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0
     return product_title, product_price, is_out_of_stock

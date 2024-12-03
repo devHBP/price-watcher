@@ -132,13 +132,11 @@ def parse_padel_nuestro(soup, designation, prix, badge):
     if not product_price:
         # Version ou le produit n'a pas de promotions ect .. une span en moins dans l'arbo :/
         product_price = soup.select_one('div.product-info-price>div.price-box>span>span>span.price')
-    else:
-        product_price = float(0)
     
     # Traitement de product_price avant d'être return en DB
     product_price = product_price.text.replace('\xa0', '').replace('€', '')
     product_price = product_price.replace(',', '.')
-    # product_price = float(product_price)
+    product_price = float(product_price)
     
     # Ternaire en python qui pique les yeux
     is_out_of_stock = 1 if product_badge_rupture or product_title == "Produit introuvable ou retiré." else 0

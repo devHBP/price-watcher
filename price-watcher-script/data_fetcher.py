@@ -131,9 +131,9 @@ def main():
                 time.sleep(2)
                 designation, prix, is_out_of_stock = scrape_with_requests(full_url, parser, parser_designation, parser_prix, parser_badge_rupture)
                 update_product_data(product['id'], prix, designation, is_out_of_stock)
-                log_scrapped_product(full_url, designation, prix, index, total_products)
+                log_scrapped_product(designation, prix, index, total_products)
                 print("Passage dans le scrapping basique")
-                print(designation, prix, is_out_of_stock)
+                print(full_url, designation, prix, is_out_of_stock)
             except Exception as error:
                 print(f"Erreur lors du traitement de {full_url} avec requests: {str(error)}")
         else:
@@ -145,8 +145,8 @@ def main():
                 soup = BeautifulSoup(page_source, 'html.parser')
                 designation, prix , is_out_of_stock= parser(soup, parser_designation, parser_prix, parser_badge_rupture)
                 update_product_data(product['id'], prix, designation, is_out_of_stock)
-                log_scrapped_product(full_url, designation, prix, index, total_products)
-                print(designation, prix, is_out_of_stock)
+                log_scrapped_product(designation, prix, index, total_products)
+                print(full_url, designation, prix, is_out_of_stock)
             except Exception as error:
                 print(f"Erreur lors du traitement de {full_url}: {str(error)}")
 

@@ -26,4 +26,4 @@ def get_chrome_options():
     return chrome_options
 
 def get_chrome_service():
-    return Service(ChromeDriverManager(driver_version="128.0.6613.137").install())
+    return Service(ChromeDriverManager(driver_version="131.0.6778.108").install())

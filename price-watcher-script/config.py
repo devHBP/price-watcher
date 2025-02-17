@@ -9,7 +9,7 @@ def get_chrome_options():
     chrome_options = Options()
 
     # Masquer Selenium
-    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.137 Safari/537.36"
+    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.6943.98 Safari/537.36"
     chrome_options.add_argument('--headless')
     chrome_options.add_argument(f"user-agent={user_agent}")
     chrome_options.add_argument('--disable-gpu')
@@ -26,4 +26,4 @@ def get_chrome_options():
     return chrome_options
 
 def get_chrome_service():
-    return Service(ChromeDriverManager(driver_version="131.0.6778.108").install())
+    return Service(ChromeDriverManager(driver_version="133.0.6943.98").install())
